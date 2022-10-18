@@ -8,12 +8,18 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Box
   - Water
   - UI
+<<<<<<< Updated upstream
   - 
   - 
   - 
+=======
+  - Player
+  - BoxContent
+  - Enemy
+>>>>>>> Stashed changes
   - 
   - 
   - 

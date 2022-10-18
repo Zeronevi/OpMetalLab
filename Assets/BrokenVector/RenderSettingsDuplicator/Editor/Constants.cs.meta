@@ -1,0 +1,18 @@
+fileFormatVersion: 2
+guid: 064e06b5f8b25b94a81445192dbe7923
+labels:
+- lighting
+- duplicate
+- editorscript
+- copy
+- rendersettings
+timeCreated: 1458563303
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
