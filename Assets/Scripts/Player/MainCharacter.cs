@@ -12,6 +12,10 @@ public class MainCharacter : MonoBehaviour
     Vector2 _velocity;
     private Rigidbody2D _rb;
     private bool _canMove = true;
+
+    //Depois refatorar em nova classe1
+    public GameObject bullet,gunBarrel;
+    public float bulletSpeed;
     
     void Start()
     {
@@ -45,7 +49,12 @@ public class MainCharacter : MonoBehaviour
         if (_canMove) _rb.velocity = _velocity*speed;
     }
     
-    void Shoot(){
-        print("Pew!");
+    void Shoot()
+    {
+        var objBullet = Instantiate(this.bullet, gunBarrel.transform.position,bullet.transform.rotation);
+        objBullet.GetComponent<Rigidbody2D>().velocity = 
+            bulletSpeed*(SharedContent.MousePosition - (Vector2)transform.position).normalized;
+        
+        NoiseSystem.MakeNoise(transform.position,5f);
     }
 }
