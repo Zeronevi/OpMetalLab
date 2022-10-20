@@ -23,6 +23,14 @@ public class NoiseSystem : MonoBehaviour
 
     public static void MakeNoise(Vector2 position, float strenght)
     {
+        foreach (GameObject enemy in Enemy.enemyList)
+        {
+            if (Vector2.Distance(position, enemy.transform.position) < strenght)
+            {
+                enemy.GetComponent<Enemy>().SetDestiny(position);
+                print("Sampla");
+            }
+        }
         Noises.Add(new Noise(position,strenght));
     }
 
@@ -30,8 +38,7 @@ public class NoiseSystem : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            print("aaaa");
-            Noises.Add(new Noise(SharedContent.MousePosition,1.0f));
+            Noises.Add(new Noise(SharedContent.MousePosition,2.0f));
         }
     }
     
@@ -46,7 +53,6 @@ public class NoiseSystem : MonoBehaviour
                 Gizmos.DrawWireSphere(noise.Position, noise.Strength);
             }
         }
-
     }
 }
 

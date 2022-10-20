@@ -12,11 +12,8 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D col)
     {
-        if (col.gameObject.CompareTag("Wall"))
-        {
-            NoiseSystem.MakeNoise(transform.position,2f);
+            NoiseSystem.MakeNoise(transform.position,4f);
             Destroy(this);
-        }
         
         Destroy(this.gameObject);
     }
