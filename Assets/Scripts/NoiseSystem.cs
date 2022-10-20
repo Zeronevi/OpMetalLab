@@ -36,9 +36,8 @@ public class NoiseSystem : MonoBehaviour
 
     void DebugInfo()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            Noises.Add(new Noise(SharedContent.MousePosition,2.0f));
+        if (Input.GetKeyDown(KeyCode.Mouse1)){
+            NoiseSystem.MakeNoise(SharedContent.MousePosition, 2f);
         }
     }
     
