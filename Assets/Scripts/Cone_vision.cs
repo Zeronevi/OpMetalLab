@@ -13,16 +13,13 @@ public class Cone_vision : MonoBehaviour
     [SerializeField] private int rayCount = 50;
     [SerializeField] private LayerMask layerMask;
 
-    [SerializeField] private double K_CONTROL_EXTEND_VIEWDISTANCE = 0.1;
-    [SerializeField] private double K_CONTROL_EXTEND_FOV = 0.1;
+    [SerializeField] private float K_CONTROL_EXTEND_VIEWDISTANCE = 0.1f;
+    [SerializeField] private float K_CONTROL_EXTEND_FOV = 0.1f;
 
     [SerializeField] private bool controlled = true;
 
-    private float reference_fov;
-    private float reference_viewDistance;
-
-    private float current_fov;
-    private float current_viewDistance;
+    private Model1 fov;
+    private Model1 viewDistance;
 
     private Mesh mesh;
     private Vector3 origin;
@@ -33,17 +30,15 @@ public class Cone_vision : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
         origin = Vector3.zero;
 
-        reference_fov = NORMAL_FOV;
-        reference_viewDistance = NORMAL_VIEWDISTANCE;
+        fov = new Model1(0.01f, 0.01f, NORMAL_FOV);
+        viewDistance = new Model1(0.01f, 0.01f, NORMAL_VIEWDISTANCE);
 
-        current_fov = NORMAL_FOV;
-        current_viewDistance = NORMAL_VIEWDISTANCE;
     }
 
     private void FixedUpdate()
     {
-        ProportionalControlFovExtend(Time.deltaTime);
-        ProportionalControlViewDistanceExtend(Time.deltaTime);
+        fov.ProportionalControl(Time.deltaTime, K_CONTROL_EXTEND_FOV);
+        viewDistance.ProportionalControl(Time.deltaTime, K_CONTROL_EXTEND_VIEWDISTANCE);
     }
 
     private void LateUpdate()
@@ -57,49 +52,21 @@ public class Cone_vision : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1)) 
         {
-            reference_fov = TARGET_FOV;
-            reference_viewDistance = TARGET_VIEWDISTANCE;
+            fov.SetReferenceValue(TARGET_FOV);
+            viewDistance.SetReferenceValue(TARGET_VIEWDISTANCE);
         }
         else if(Input.GetMouseButtonUp(1))
         {
-            reference_fov = NORMAL_FOV;
-            reference_viewDistance = NORMAL_VIEWDISTANCE;
+            fov.SetReferenceValue(NORMAL_FOV);
+            viewDistance.SetReferenceValue(NORMAL_VIEWDISTANCE);
         }
-    }
-
-    private void ProportionalControlFovExtend(float deltaT)
-    {
-        float error = reference_fov - current_fov;
-        float force = (float)(K_CONTROL_EXTEND_FOV * error);
-        current_fov = Utils.euler(deltaT, current_fov, force, 0.01f, 0.01f);
-    }
-
-    private void ProportionalControlViewDistanceExtend(float deltaT)
-    {
-        float error = reference_viewDistance - current_viewDistance;
-        float force = (float)(K_CONTROL_EXTEND_VIEWDISTANCE * error);
-        current_viewDistance = Utils.euler(deltaT, current_viewDistance, force, 0.01f, 0.01f);
-    }
-
-    public void setTargetExtended()
-    {
-        reference_fov = TARGET_FOV;
-        reference_viewDistance = TARGET_VIEWDISTANCE;
-    }
-
-    public void setTargetNormal()
-    {
-        reference_fov = NORMAL_FOV;
-        reference_viewDistance = NORMAL_VIEWDISTANCE;
-    }
-
-    public void SetFov(float fov)
-    {
-        this.current_fov = fov;
     }
 
     private void UpdateMesh()
     {
+        float current_fov = fov.GetCurrentValue();
+        float current_viewDistance = viewDistance.GetCurrentValue();
+
         float angle = current_fov / 2f;
         float angleIncrease = current_fov / rayCount;
         

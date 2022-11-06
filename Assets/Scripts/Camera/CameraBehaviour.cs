@@ -13,20 +13,30 @@ public class CameraBehaviour : MonoBehaviour{
     
     private const float CameraHeight = -10f;
 
-    
+    private float DEFAULT_DELTAPOSITION = 0f;
+    [SerializeField] private float K_CONTROL_DELTACAMERA = 0.1f;
+
+    private float DEFAULT_ZOOM = 12f;
+    private float MIN_ZOOM = 5f;
+    private float MAX_ZOOM = 20f;
+    private float K_CONTROL_ZOOM = 0.025f;
+    private float speedZoom = -1400f;
+    private Model1 cameraX, cameraY, cameraZOOM;
+
     private void Start(){
         _target = LookAt.Player;
-        reference_deltaPosition = DEFAULT_DELTAPOSITION*Vector2.zero;
-        current_deltaPosition = DEFAULT_DELTAPOSITION*Vector2.one;
 
-        reference_zoom = DEFAULT_ZOOM;
-        current_zoom = DEFAULT_ZOOM;
+        cameraX = new Model1(0.01f, 0.01f, DEFAULT_DELTAPOSITION);
+        cameraY = new Model1(0.01f, 0.01f, DEFAULT_DELTAPOSITION);
+        cameraZOOM = new Model1(0.01f, 0.01f, DEFAULT_ZOOM);
+
     }
 
     private void FixedUpdate()
     {
-        ProportionalControlDeltaCameraPosition(Time.deltaTime);
-        ProportionalControlZoomCamera(Time.deltaTime);
+        cameraX.ProportionalControl(Time.deltaTime, K_CONTROL_DELTACAMERA);
+        cameraY.ProportionalControl(Time.deltaTime, K_CONTROL_DELTACAMERA);
+        cameraZOOM.ProportionalControl(Time.deltaTime, K_CONTROL_ZOOM);
     }
 
     private void Update(){
@@ -54,9 +64,10 @@ public class CameraBehaviour : MonoBehaviour{
     private void UpdateZoom(float deltaT)
     {
         float deltaZoom = Input.GetAxis("Mouse ScrollWheel") *speedZoom*deltaT;
-        float newZoom = reference_zoom + deltaZoom;
-        if (newZoom <= MAX_ZOOM && newZoom >= MIN_ZOOM) reference_zoom = newZoom;
-        Camera.main.orthographicSize = current_zoom;
+        float newZoom = cameraZOOM.GetReferenceValue() + deltaZoom;
+        if (newZoom <= MAX_ZOOM && newZoom >= MIN_ZOOM) cameraZOOM.SetReferenceValue(newZoom);
+
+        Camera.main.orthographicSize = cameraZOOM.GetCurrentValue();
     }
     
     public void SetPredefinedPath(List<Vector2> pathPoints){
@@ -70,7 +81,8 @@ public class CameraBehaviour : MonoBehaviour{
         switch (_target){
             default: 
             case LookAt.Player:
-                reference_deltaPosition = DEFAULT_DELTAPOSITION*Vector2.one;
+                cameraX.SetReferenceValue(DEFAULT_DELTAPOSITION);
+                cameraY.SetReferenceValue(DEFAULT_DELTAPOSITION);
                 break;
             case LookAt.Target:
                 break;
@@ -78,44 +90,21 @@ public class CameraBehaviour : MonoBehaviour{
                 Vector2 playerPosition = Vector2.zero;
                 playerPosition.x = center.x;
                 playerPosition.y = center.y;
-                reference_deltaPosition = (SharedContent.MousePosition-playerPosition) *3f/5f;
+                Vector2 reference_deltaPosition = (SharedContent.MousePosition-playerPosition) *3f/5f;
+
+                cameraX.SetReferenceValue(reference_deltaPosition.x);
+                cameraY.SetReferenceValue(reference_deltaPosition.y);
+
                 break;
         }
         center.z = CameraHeight;
 
         Vector3 newPosition = center;
-        newPosition.x += current_deltaPosition.x;
-        newPosition.y += current_deltaPosition.y;
+        newPosition.x += cameraX.GetCurrentValue();
+        newPosition.y += cameraY.GetCurrentValue();
 
         transform.position = newPosition;
     }
 
-    private float DEFAULT_DELTAPOSITION = 0f;
-    [SerializeField] private float K_CONTROL_DELTACAMERA = 0.1f;
 
-    private Vector2 reference_deltaPosition;
-    private Vector2 current_deltaPosition;
-
-    private void ProportionalControlDeltaCameraPosition(float deltaT)
-    {
-        Vector2 error = reference_deltaPosition - current_deltaPosition;
-        Vector2 force = (K_CONTROL_DELTACAMERA * error);
-        current_deltaPosition = Utils.euler(deltaT, current_deltaPosition, force, 0.01f, 0.01f);
-    }
-
-    private float DEFAULT_ZOOM = 12f;
-    private float MIN_ZOOM = 5f;
-    private float MAX_ZOOM = 20f;
-    private float K_CONTROL_ZOOM = 0.025f;
-    private float speedZoom = -1400f;
-
-    private float reference_zoom;
-    private float current_zoom;
-
-    private void ProportionalControlZoomCamera(float deltaT)
-    {
-        float error = reference_zoom - current_zoom;
-        float force = (K_CONTROL_ZOOM * error);
-        current_zoom = Utils.euler(deltaT, current_zoom, force, 0.01f, 0.01f);
-    }
 }

@@ -7,28 +7,27 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class MainCharacter : MonoBehaviour
 {
-    
-    public float speed;
+
+    private float NORMAL_SPEED = 6f;
+    private float RUN_SPEED = 10f;
+    private float SNIPER_SPEED = 1f;
+    private float TARGET_SPEED = 3f;
+
+    private float speed;
     Vector2 _velocity;
     private Rigidbody2D _rb;
     private bool _canMove = true;
-
-    //Depois refatorar em nova classe1
-    public GameObject bullet,gunBarrel;
-    public float bulletSpeed;
     
     void Start()
     {
         _velocity = new Vector2();
         _rb = GetComponent<Rigidbody2D>();
-        
+        speed = NORMAL_SPEED;
     }
 
     void Update()
     {
-        LookAtMouse();
-        if(Input.GetKeyDown(KeyCode.Mouse0)) Shoot();
-        
+        LookAtMouse();  
         Move();
     }
 
@@ -49,12 +48,4 @@ public class MainCharacter : MonoBehaviour
         if (_canMove) _rb.velocity = _velocity*speed;
     }
     
-    void Shoot()
-    {
-        var objBullet = Instantiate(this.bullet, gunBarrel.transform.position,bullet.transform.rotation);
-        objBullet.GetComponent<Rigidbody2D>().velocity = 
-            bulletSpeed*(SharedContent.MousePosition - (Vector2)transform.position).normalized;
-        
-        NoiseSystem.MakeNoise(transform.position,5f);
-    }
 }
