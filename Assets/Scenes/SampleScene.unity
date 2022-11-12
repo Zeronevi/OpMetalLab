@@ -264,7 +264,7 @@ GameObject:
   - component: {fileID: 120705239}
   m_Layer: 3
   m_Name: Square
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -393,7 +393,7 @@ GameObject:
   - component: {fileID: 471083217}
   m_Layer: 3
   m_Name: hand
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -692,7 +692,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 570960831}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: GunBarrel
   m_TagString: Untagged
   m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
@@ -2896,7 +2896,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveTarget: {x: 0, y: 0}
-  _agent: {fileID: 0}
+  agent: {fileID: 0}
+  mask:
+    serializedVersion: 2
+    m_Bits: 9
+  player: {fileID: 2010186497}
+  fov: 40
 --- !u!1 &1302702678
 GameObject:
   m_ObjectHideFlags: 0
@@ -2908,7 +2913,7 @@ GameObject:
   - component: {fileID: 1302702679}
   m_Layer: 3
   m_Name: GunBarrel
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 7866945982896999795, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2940,7 +2945,7 @@ GameObject:
   - component: {fileID: 1346736408}
   m_Layer: 3
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3028,7 +3033,7 @@ GameObject:
   - component: {fileID: 1351465536}
   m_Layer: 3
   m_Name: hand2
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3196,7 +3201,7 @@ GameObject:
   - component: {fileID: 1539332683}
   m_Layer: 3
   m_Name: Head
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3370,7 +3375,7 @@ GameObject:
   - component: {fileID: 2010186501}
   m_Layer: 3
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

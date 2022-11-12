@@ -55,6 +55,6 @@ public class MainCharacter : MonoBehaviour
         objBullet.GetComponent<Rigidbody2D>().velocity = 
             bulletSpeed*(SharedContent.MousePosition - (Vector2)transform.position).normalized;
         
-        NoiseSystem.MakeNoise(transform.position,5f);
+        NoiseSystem.MakeNoise(transform.position,15f,Noise.SoundType.Gunshot);
     }
 }

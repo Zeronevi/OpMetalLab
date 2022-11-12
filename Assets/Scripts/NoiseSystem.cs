@@ -21,23 +21,20 @@ public class NoiseSystem : MonoBehaviour
         DebugInfo();
     }
 
-    public static void MakeNoise(Vector2 position, float strenght)
+    public static void MakeNoise(Vector2 position, float strenght, Noise.SoundType soundType)
     {
-        foreach (GameObject enemy in Enemy.enemyList)
+        Noise noise = new Noise(position, strenght, soundType);
+        foreach (Enemy enemy in Enemy.enemyList)
         {
-            if (Vector2.Distance(position, enemy.transform.position) < strenght)
-            {
-                enemy.GetComponent<Enemy>().SetDestiny(position);
-                print("Sampla");
-            }
+            enemy.Listen(noise);
         }
-        Noises.Add(new Noise(position,strenght));
+        Noises.Add(noise);
     }
 
     void DebugInfo()
     {
         if (Input.GetKeyDown(KeyCode.Mouse1)){
-            NoiseSystem.MakeNoise(SharedContent.MousePosition, 2f);
+            NoiseSystem.MakeNoise(SharedContent.MousePosition, 15f, Noise.SoundType.Gunshot);
         }
     }
     
@@ -61,9 +58,17 @@ public class Noise
     public Vector2 Position;
     public float Strength;
 
-    public Noise(Vector2 pos, float strength)
+    public enum SoundType
+    {
+        //TODO tweak
+        AmbientNoise = 1,Steps = 3,BulletHit = 5,SilencedGunshot = 8,Gunshot = 15
+    }
+    public SoundType soundType;
+    
+    public Noise(Vector2 pos, float strength, SoundType soundType)
     {
         Position = pos;
         Strength = strength;
+        this.soundType = soundType;
     }
 }
