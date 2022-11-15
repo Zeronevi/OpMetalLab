@@ -13,6 +13,12 @@ public class Sub : Weapon
         TIME_RELOAD = 2f;
         bulletSpeed = 30f;
 
+        speed_on_target = 1/2f*MainCharacter.NORMAL_SPEED;
+        fov_on_target = 90f;
+        viewDistance_on_target = 10f;
+
+        radius_on_target = 1f;
+
         addAmmo(120);
     }
 

@@ -4,39 +4,43 @@ using UnityEngine;
 
 public class Normal_Target : Target
 {
-    private float DEFAULT_RADIUS = 1f;
     private int DEFAULT_STEPS = 20;
 
     private int steps;
-    private float radius;
 
     private LineRenderer circleRender;
 
-    private float K_CONTROL_OSCILATION = 1f;
-    [SerializeField] private Component referenceToOscilation;
-    private Model2 radialVariation, tangentialVariation, radiusVariation;
+    private float KP_CONTROL;
+    private float KI_CONTROL;
+    private float KD_CONTROL;
+
+    private Model1 radius;
+    private Model2 radiusVariation;
     
 
     protected override void Start()
     {
         circleRender = GetComponent<LineRenderer>();
 
-        radius = DEFAULT_RADIUS;
         steps = DEFAULT_STEPS;
 
-        float m = 0.5f;
-        float k = 1f;
-        float b = 0.0001f;
+        KP_CONTROL = DEFAULT_KP_CONTROL;
+        KI_CONTROL = DEFAULT_KI_CONTROL;
+        KD_CONTROL = DEFAULT_KD_CONTROL;
 
-        radialVariation = new Model2(m, k, b, 0, 0);
-        tangentialVariation = new Model2(m, k, b, 0, 0);
-        radiusVariation = new Model2(m, k, b, 0, 0);
+        float wn = 1f;
+        float zeta = 0.1f;
+
+        radius = new Model1(0.01f, 0.01f, DEFAULT_RADIUS);
+        radiusVariation = new Model2(wn, zeta, 0, 0);
     }
 
     protected override void Draw()
     {
         circleRender.positionCount = steps;
         Vector2 currentPosition = transform.position;
+
+        float radius = Mathf.Abs(this.radius.GetCurrentValue() + radiusVariation.GetCurrentValue());
         for (int currentStep = 0; currentStep < steps; currentStep++) 
         {
             float circunferenceProgress = ((float) currentStep) / ((float) steps)*2*Mathf.PI;
@@ -51,31 +55,59 @@ public class Normal_Target : Target
         }
     }
 
-    private void FixedUpdate()
+    public override Vector2 GetPositionTarget()
     {
-        radialVariation.ProportionalControl(Time.deltaTime, K_CONTROL_OSCILATION);
-        tangentialVariation.ProportionalControl(Time.deltaTime, K_CONTROL_OSCILATION);
-        radiusVariation.ProportionalControl(Time.deltaTime, K_CONTROL_OSCILATION);
+        return GetRandomPositionInTarget();
     }
 
-    protected override void UpdateOscilation()
+    public override void setCorrectRadius(float radius)
     {
-        Vector2 current_position = transform.position;
-        if (referenceToOscilation == null)
-        {
-            transform.position = current_position;
-            radius = DEFAULT_RADIUS;
-        } 
-        else
-        {
-            Vector2 radialDireciton = (Utils.GetMouseWorldPosition() - referenceToOscilation.transform.position).normalized;
-            float angle = Utils.GetAngleFormVectorFloat(radialDireciton)*Mathf.PI/180;
-            
-            Vector2 oscilation = new Vector2(radialVariation.GetCurrentValue() * Mathf.Cos(angle) - tangentialVariation.GetCurrentValue() * Mathf.Sin(angle),
-                                             radialVariation.GetCurrentValue() * Mathf.Sin(angle) + tangentialVariation.GetCurrentValue() * Mathf.Cos(angle));
-            transform.position = current_position + oscilation;
+        this.radius.SetReferenceValue(radius);
+    }
 
-            radius = DEFAULT_RADIUS + radiusVariation.GetCurrentValue();
+    public override void setControl(float kp, float ki, float kd)
+    {
+        KD_CONTROL = kd;
+        KI_CONTROL = ki;
+        KP_CONTROL = kp;
+    }
+
+    public Vector2 GetRandomPositionInTarget()
+    {
+        float randomRadius = Random.Range(0f, radius.GetCurrentValue());
+        float angle = Random.Range(0f, 2 * Mathf.PI);
+
+        Vector2 result = transform.position;
+        result.x += randomRadius * Mathf.Cos(angle);
+        result.y += randomRadius * Mathf.Sin(angle);
+        return result;
+    }
+
+    protected override void Control(float time)
+    {
+        radius.ProportionalControl(time, 0.5f);
+        radiusVariation.ProportionalControl(time, KP_CONTROL, KI_CONTROL, KD_CONTROL);
+    }
+
+
+    private Vector2 lastPostion;
+    protected override void UpdateOscilation(float time)
+    {
+        Vector2 currentPosition = transform.position;
+        if (lastPostion == null)
+        {
+            lastPostion = currentPosition;
+            return;
         }
+
+        Vector2 diff = currentPosition - lastPostion;
+        float magnitudeDiff = diff.magnitude;
+
+        float fator = 1f;
+
+        float referenceValue = fator * (magnitudeDiff);
+
+        radiusVariation.SetReferenceValue(referenceValue);
+        lastPostion = currentPosition;
     }
 }

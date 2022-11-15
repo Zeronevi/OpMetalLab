@@ -13,6 +13,10 @@ public class Sniper : Weapon
         TIME_RELOAD = 3f;
         bulletSpeed = 50f;
 
+        speed_on_target = 5f;
+        fov_on_target = 5f;
+        viewDistance_on_target = 120f;
+
         addAmmo(25);
     }
 

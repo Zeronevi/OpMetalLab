@@ -12,6 +12,9 @@ public class Pistol : Weapon
         TIME_SHOOTS = 1f;
         TIME_RELOAD = 2f;
 
+        fov_on_target = Cone_vision.NORMAL_FOV-5f;
+        viewDistance_on_target = Cone_vision.NORMAL_VIEWDISTANCE + 5f;
+
         addAmmo(20);
     }
 

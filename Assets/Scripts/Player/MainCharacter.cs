@@ -8,10 +8,8 @@ using UnityEngine;
 public class MainCharacter : MonoBehaviour
 {
 
-    private float NORMAL_SPEED = 6f;
-    private float RUN_SPEED = 10f;
-    private float SNIPER_SPEED = 1f;
-    private float TARGET_SPEED = 3f;
+    public static float NORMAL_SPEED = 6f;
+    public static float RUN_SPEED = 10f;
 
     private float speed;
     Vector2 _velocity;
@@ -46,6 +44,11 @@ public class MainCharacter : MonoBehaviour
         _velocity = _velocity.normalized;        
 
         if (_canMove) _rb.velocity = _velocity*speed;
+    }
+
+    public void SetSpeed(float value)
+    {
+        speed = value;
     }
     
 }

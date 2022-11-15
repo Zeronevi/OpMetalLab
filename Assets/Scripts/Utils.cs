@@ -54,4 +54,18 @@ public class Utils :MonoBehaviour
         return result;
     }
 
+    public static Vector2 eulerOrdem2(float deltaT, float position, float speed, float force, float wn, float zeta)
+    {
+
+        float aceleration = -((2 * zeta) / (wn)) * speed - (1/(wn*wn)) * position + 1 * force / (wn*wn);
+
+        float newPosition = position + speed * deltaT + (aceleration / 2) * (deltaT * deltaT);
+        float newSpeed = speed + aceleration * deltaT;
+
+        Vector2 result = Vector2.zero;
+        result.x = newPosition;
+        result.y = newSpeed;
+        return result;
+    }
+
 }

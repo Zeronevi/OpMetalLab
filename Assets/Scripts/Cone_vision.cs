@@ -4,19 +4,14 @@ using UnityEngine;
 
 public class Cone_vision : MonoBehaviour
 {
-    [SerializeField] public float NORMAL_FOV = 40f;
-    [SerializeField] public float TARGET_FOV = 20f;
-
-    [SerializeField] public float NORMAL_VIEWDISTANCE = 20f;
-    [SerializeField] public float TARGET_VIEWDISTANCE = 40f;
+    [SerializeField] public static float NORMAL_FOV = 40f;
+    [SerializeField] public static float NORMAL_VIEWDISTANCE = 10f;
 
     [SerializeField] private int rayCount = 50;
     [SerializeField] private LayerMask layerMask;
 
     [SerializeField] private float K_CONTROL_EXTEND_VIEWDISTANCE = 0.1f;
     [SerializeField] private float K_CONTROL_EXTEND_FOV = 0.1f;
-
-    [SerializeField] private bool controlled = true;
 
     private Model1 fov;
     private Model1 viewDistance;
@@ -43,23 +38,17 @@ public class Cone_vision : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (controlled) control();
         UpdateMesh();
-
     }
 
-    private void control()
+    public void SetReferenceFov(float value)
     {
-        if (Input.GetMouseButtonDown(1)) 
-        {
-            fov.SetReferenceValue(TARGET_FOV);
-            viewDistance.SetReferenceValue(TARGET_VIEWDISTANCE);
-        }
-        else if(Input.GetMouseButtonUp(1))
-        {
-            fov.SetReferenceValue(NORMAL_FOV);
-            viewDistance.SetReferenceValue(NORMAL_VIEWDISTANCE);
-        }
+        fov.SetReferenceValue(value);
+    }
+
+    public void SetReferenceViewDistance(float value)
+    {
+        viewDistance.SetReferenceValue(value);
     }
 
     private void UpdateMesh()

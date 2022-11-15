@@ -6,8 +6,9 @@ public class WeaponSystem : MonoBehaviour
 {
     private int MAX_INVENTORY_PLAYER = 5;
 
-    [SerializeField] private WeaponInventory inventoryScene;
-    [SerializeField] private WeaponInventory playerInventory;
+    [SerializeField] private WeaponInventory inventoryScene = null;
+    [SerializeField] private WeaponInventory playerInventory = null;
+    [SerializeField] private Target playerTarget = null;
 
     private GameObject player;
     private BoxCollider2D playerCollider;
@@ -24,6 +25,8 @@ public class WeaponSystem : MonoBehaviour
     }
 
     private bool shooting = false;
+    private bool target = false;
+    private bool running = false;
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
@@ -34,12 +37,72 @@ public class WeaponSystem : MonoBehaviour
             shooting = false;
         }
 
-        if(shooting) Shoot();
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            target = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.Mouse1))
+        {
+            target = false;
+        }
+
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            running = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            running = false;
+        }
 
         selectWeapon();
         dropWeapon();
         takeWeapon();
         ReloadWeapon();
+        MaybeShoot();
+        AdjustParameters();
+       
+    }
+
+    private void MaybeShoot()
+    {
+        if (shooting) Shoot();
+    }
+
+    private void AdjustParameters()
+    {
+        if (target && playerInventory.isSelected())
+        {
+            Weapon weapon = playerInventory.getSelectedWeapon();
+            float newFov = weapon.GetFov_on_target();
+            float newViewDistance = weapon.GetViewDistance_on_target();
+            float newSpeed = weapon.GetSpeed_on_target();
+
+            if (newFov == Weapon.DEFAULT_VALUE) newFov = Cone_vision.NORMAL_FOV;
+            if (newViewDistance == Weapon.DEFAULT_VALUE) newViewDistance = Cone_vision.NORMAL_VIEWDISTANCE;
+            if (newSpeed == Weapon.DEFAULT_VALUE) newSpeed = MainCharacter.NORMAL_SPEED;
+
+            PlayerStatus.SetVision(newFov, newViewDistance);
+            PlayerStatus.SetSpeed(newSpeed);
+
+            playerTarget.setCorrectRadius(weapon.GetRadiusOnTarget());
+            playerTarget.setControl(10f, 1f, 10f);
+        }
+        else
+        {
+            PlayerStatus.SetVision(Cone_vision.NORMAL_FOV, Cone_vision.NORMAL_VIEWDISTANCE);
+
+            if (running)
+            {
+                PlayerStatus.SetSpeed(MainCharacter.RUN_SPEED);
+            } else
+            {
+                PlayerStatus.SetSpeed(MainCharacter.NORMAL_SPEED);
+            }
+
+            playerTarget.setCorrectRadius(Target.DEFAULT_RADIUS);
+            playerTarget.setControl(Target.DEFAULT_KP_CONTROL, Target.DEFAULT_KI_CONTROL, Target.DEFAULT_KD_CONTROL);
+        }
     }
 
     private void selectWeapon()
@@ -101,8 +164,8 @@ public class WeaponSystem : MonoBehaviour
 
         if (!weapon.CanShoot()) return;
 
-        Vector2 direciton = (SharedContent.MousePosition - (Vector2) player.transform.position);
-        weapon.Shoot(this.bullet, gunBarrel.transform.position, bullet.transform.rotation, direciton);
+        Vector2 positionToFire = playerTarget.GetPositionTarget();  
+        weapon.Shoot(this.bullet, gunBarrel.transform.position, bullet.transform.rotation, positionToFire);
     }
 
     private void ReloadWeapon()

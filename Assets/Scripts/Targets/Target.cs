@@ -4,6 +4,10 @@ using UnityEngine;
 
 public abstract class Target : MonoBehaviour
 {
+    public static float DEFAULT_RADIUS = 0.75f;
+    public static float DEFAULT_KP_CONTROL = 0.3f;
+    public static float DEFAULT_KI_CONTROL = 0.3f;
+    public static float DEFAULT_KD_CONTROL = 1f;
 
     // Start is called before the first frame update
     protected abstract void Start();
@@ -12,8 +16,14 @@ public abstract class Target : MonoBehaviour
     void Update()
     {
         UpdatePosition();
-        UpdateOscilation();
+        //UpdateOscilation(Time.deltaTime);
         Draw();
+    }
+
+    private void FixedUpdate()
+    {
+        UpdateOscilation(Time.deltaTime);
+        Control(Time.deltaTime);
     }
 
     private void UpdatePosition()
@@ -25,7 +35,15 @@ public abstract class Target : MonoBehaviour
         transform.position = MouseScreenPosition;
     }
 
-    protected abstract void UpdateOscilation();
+    public abstract Vector2 GetPositionTarget();
+
+    public abstract void setCorrectRadius(float radius);
+
+    public abstract void setControl(float kp, float ki, float kd);
+
+    protected abstract void Control(float time);
+
+    protected abstract void UpdateOscilation(float time);
 
     protected abstract void Draw();
     

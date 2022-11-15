@@ -51,6 +51,11 @@ public class WeaponInventory : MonoBehaviour
             weapons[index].Equip();
             weapons[index].ResetTime();
             indexSelectedWeapon = index;
+
+            if (isPlayer)
+            {
+                
+            }
         }
 
         return true;
@@ -80,7 +85,7 @@ public class WeaponInventory : MonoBehaviour
         indexSelectedWeapon = NOT_SELECTED;
     }
 
-    public int findeWeapon(Weapon weapon)
+    public int findWeapon(Weapon weapon)
     {
         if(weapons.Contains(weapon))
         {
