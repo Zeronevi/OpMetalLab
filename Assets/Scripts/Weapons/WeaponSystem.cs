@@ -123,6 +123,7 @@ public class WeaponSystem : MonoBehaviour
         {
             print("Nenhuma arma selecionada!");
             playerInventory.selectThisWeapon(WeaponInventory.NOT_SELECTED);
+            AdjustTarget();
             return;
         }
 
@@ -139,7 +140,14 @@ public class WeaponSystem : MonoBehaviour
 
     private void AdjustTarget()
     {
-        Target referenceTarget = playerInventory.getSelectedWeapon().GetTarget();
+        Weapon weapon = playerInventory.getSelectedWeapon();
+        if(weapon == null) 
+        {
+            targetSystem.SetCurrentTarget(null);
+            return;
+        }
+
+        Target referenceTarget = weapon.GetTarget();
         if (referenceTarget == null)
         {
             targetSystem.SetDefaultTarget();
@@ -156,8 +164,8 @@ public class WeaponSystem : MonoBehaviour
         {
             Weapon weapon = playerInventory.getSelectedWeapon();
             playerInventory.removeSelectedWeapon();
-
             inventoryScene.addWeapon(weapon);
+            AdjustTarget();
         }
     }
 
