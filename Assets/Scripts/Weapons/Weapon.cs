@@ -7,6 +7,8 @@ public abstract class Weapon : MonoBehaviour
     private GameObject superior;
     private GameObject lateral;
 
+    [SerializeField] protected Target target = null;
+
     public static int DEFAULT_VALUE = -10;
 
     public static int IFINITE_AMMO = -1;
@@ -199,4 +201,8 @@ public abstract class Weapon : MonoBehaviour
         return radius_on_target;
     }
 
+    public Target GetTarget()
+    {
+        return target;
+    }
 }

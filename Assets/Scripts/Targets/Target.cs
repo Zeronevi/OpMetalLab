@@ -26,14 +26,7 @@ public abstract class Target : MonoBehaviour
         Control(Time.deltaTime);
     }
 
-    private void UpdatePosition()
-    {
-        Vector2 MouseWorldPosition = SharedContent.MousePosition;
-        Vector2 CameraPosition = Vector2.zero;
-
-        Vector2 MouseScreenPosition = MouseWorldPosition - CameraPosition;
-        transform.position = MouseScreenPosition;
-    }
+    protected abstract void UpdatePosition();
 
     public abstract Vector2 GetPositionTarget();
 
@@ -47,4 +40,13 @@ public abstract class Target : MonoBehaviour
 
     protected abstract void Draw();
     
+    public void Enable()
+    {
+        gameObject.SetActive(true);
+    }
+
+    public void Disable()
+    {
+        gameObject.SetActive(false);
+    }
 }

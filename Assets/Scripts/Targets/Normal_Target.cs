@@ -35,6 +35,15 @@ public class Normal_Target : Target
         radiusVariation = new Model2(wn, zeta, 0, 0);
     }
 
+    protected override void UpdatePosition()
+    {
+        Vector2 MouseWorldPosition = SharedContent.MousePosition;
+        Vector2 CameraPosition = Vector2.zero;
+
+        Vector2 MouseScreenPosition = MouseWorldPosition - CameraPosition;
+        transform.position = MouseScreenPosition;
+    }
+
     protected override void Draw()
     {
         circleRender.positionCount = steps;

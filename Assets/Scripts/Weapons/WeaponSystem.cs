@@ -8,7 +8,7 @@ public class WeaponSystem : MonoBehaviour
 
     [SerializeField] private WeaponInventory inventoryScene = null;
     [SerializeField] private WeaponInventory playerInventory = null;
-    [SerializeField] private Target playerTarget = null;
+    [SerializeField] private Target_System targetSystem = null;
 
     private GameObject player;
     private BoxCollider2D playerCollider;
@@ -85,8 +85,14 @@ public class WeaponSystem : MonoBehaviour
             PlayerStatus.SetVision(newFov, newViewDistance);
             PlayerStatus.SetSpeed(newSpeed);
 
-            playerTarget.setCorrectRadius(weapon.GetRadiusOnTarget());
-            playerTarget.setControl(10f, 1f, 10f);
+            Target playerTarget = targetSystem.GetTarget();
+            
+            if(playerTarget != null)
+            {
+                playerTarget.setCorrectRadius(weapon.GetRadiusOnTarget());
+                playerTarget.setControl(10f, 1f, 10f);
+            }
+            
         }
         else
         {
@@ -100,8 +106,14 @@ public class WeaponSystem : MonoBehaviour
                 PlayerStatus.SetSpeed(MainCharacter.NORMAL_SPEED);
             }
 
-            playerTarget.setCorrectRadius(Target.DEFAULT_RADIUS);
-            playerTarget.setControl(Target.DEFAULT_KP_CONTROL, Target.DEFAULT_KI_CONTROL, Target.DEFAULT_KD_CONTROL);
+            Target playerTarget = targetSystem.GetTarget();
+
+            if (playerTarget != null)
+            {
+                playerTarget.setCorrectRadius(Target.DEFAULT_RADIUS);
+                playerTarget.setControl(Target.DEFAULT_KP_CONTROL, Target.DEFAULT_KI_CONTROL, Target.DEFAULT_KD_CONTROL);
+            }
+
         }
     }
 
@@ -119,8 +131,22 @@ public class WeaponSystem : MonoBehaviour
             if(Input.GetKeyDown(""+(index+1)) && playerInventory.isAvaliable(index))
             {
                 playerInventory.selectThisWeapon(index);
+                AdjustTarget();
                 return;
             }
+        }
+    }
+
+    private void AdjustTarget()
+    {
+        Target referenceTarget = playerInventory.getSelectedWeapon().GetTarget();
+        if (referenceTarget == null)
+        {
+            targetSystem.SetDefaultTarget();
+        }
+        else
+        {
+            targetSystem.SetCurrentTarget(referenceTarget);
         }
     }
 
@@ -150,6 +176,7 @@ public class WeaponSystem : MonoBehaviour
             {
                 inventoryScene.removeWeapon(index);
                 playerInventory.addWeapon(weapon);
+                AdjustTarget();
                 return;
             }
         }
@@ -158,11 +185,10 @@ public class WeaponSystem : MonoBehaviour
 
     void Shoot()
     {
-        if (!playerInventory.isSelected()) return;
-
+        Target playerTarget = targetSystem.GetTarget();
         Weapon weapon = playerInventory.getSelectedWeapon();
-
-        if (!weapon.CanShoot()) return;
+        if (playerTarget == null || !playerInventory.isSelected() || !weapon.CanShoot()) return;
+        
 
         Vector2 positionToFire = playerTarget.GetPositionTarget();  
         weapon.Shoot(this.bullet, gunBarrel.transform.position, bullet.transform.rotation, positionToFire);
