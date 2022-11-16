@@ -16,7 +16,9 @@ public class Normal_Target : Target
 
     private Model1 radius;
     private Model2 radiusVariation;
-    
+
+    [SerializeField] private MainCharacter player = null;
+    [SerializeField] private float AREA_LIMITE_RADIUS = 1.2f; 
 
     protected override void Start()
     {
@@ -33,23 +35,47 @@ public class Normal_Target : Target
 
         radius = new Model1(0.01f, 0.01f, DEFAULT_RADIUS);
         radiusVariation = new Model2(wn, zeta, 0, 0);
+
+        MAX_RADIUS = DEFAULT_MAX_RADIUS;
     }
 
     protected override void UpdatePosition()
     {
-        Vector2 MouseWorldPosition = SharedContent.MousePosition;
-        Vector2 CameraPosition = Vector2.zero;
+        Vector2 MouseScreenPosition;
+        if (player != null)
+        {
+            Vector2 MouseWorldPosition = SharedContent.MousePosition;
+            Vector2 playerPosition = player.transform.position;
+            Vector2 diffMouseAndPlayer = MouseWorldPosition - playerPosition;
 
-        Vector2 MouseScreenPosition = MouseWorldPosition - CameraPosition;
+            float minRadius = AREA_LIMITE_RADIUS + Mathf.Abs(radius.GetCurrentValue() + radiusVariation.GetCurrentValue());
+            if (diffMouseAndPlayer.magnitude < minRadius)
+            {
+                MouseScreenPosition = diffMouseAndPlayer.normalized * minRadius+playerPosition;
+            } else
+            {
+                Vector2 CameraPosition = Vector2.zero;
+                MouseScreenPosition = MouseWorldPosition - CameraPosition;
+            }
+        }
+        else
+        {
+            Vector2 MouseWorldPosition = SharedContent.MousePosition;
+            Vector2 CameraPosition = Vector2.zero;
+            MouseScreenPosition = MouseWorldPosition - CameraPosition;
+        }
         transform.position = MouseScreenPosition;
     }
 
     protected override void Draw()
     {
+        circleRender.startColor = color;
+        circleRender.endColor = color;
+
         circleRender.positionCount = steps;
         Vector2 currentPosition = transform.position;
 
-        float radius = Mathf.Abs(this.radius.GetCurrentValue() + radiusVariation.GetCurrentValue());
+        float radius = getRadius();
         for (int currentStep = 0; currentStep < steps; currentStep++) 
         {
             float circunferenceProgress = ((float) currentStep) / ((float) steps)*2*Mathf.PI;
@@ -83,7 +109,8 @@ public class Normal_Target : Target
 
     public Vector2 GetRandomPositionInTarget()
     {
-        float randomRadius = Random.Range(0f, radius.GetCurrentValue());
+        float currentRadius = getRadius();
+        float randomRadius = Random.Range(0f, currentRadius);
         float angle = Random.Range(0f, 2 * Mathf.PI);
 
         Vector2 result = transform.position;
@@ -94,12 +121,14 @@ public class Normal_Target : Target
 
     protected override void Control(float time)
     {
-        radius.ProportionalControl(time, 0.5f);
+        radius.ProportionalControl(time, 0.1f);
         radiusVariation.ProportionalControl(time, KP_CONTROL, KI_CONTROL, KD_CONTROL);
     }
 
 
     private Vector2 lastPostion;
+    [SerializeField] float fatorVariation = 0.5f;
+    [SerializeField] float fatorDistance = 10f;
     protected override void UpdateOscilation(float time)
     {
         Vector2 currentPosition = transform.position;
@@ -112,11 +141,35 @@ public class Normal_Target : Target
         Vector2 diff = currentPosition - lastPostion;
         float magnitudeDiff = diff.magnitude;
 
-        float fator = 1f;
-
-        float referenceValue = fator * (magnitudeDiff);
+        float referenceValue = fatorVariation * (magnitudeDiff);
+        if (player != null)
+        {
+            float dist = (currentPosition - (Vector2) player.transform.position).magnitude;
+            referenceValue -= fatorDistance * 1f / (dist*dist);
+            MAX_RADIUS = DEFAULT_MAX_RADIUS * ((dist-MIN_RADIUS) * dist) * fatorDistance;
+        }
 
         radiusVariation.SetReferenceValue(referenceValue);
         lastPostion = currentPosition;
     }
+
+    private float MIN_RADIUS = 0.01f;
+
+    private float DEFAULT_MAX_RADIUS = 5f;
+    private float MAX_RADIUS;
+    public float getRadius()
+    {
+        float radius = this.radius.GetCurrentValue()+radiusVariation.GetCurrentValue();
+        radius = Mathf.Abs(radius);
+        if (radius < MIN_RADIUS)
+        {
+            radius = MIN_RADIUS;
+        }
+        else if (radius > MAX_RADIUS)
+        {
+            radius = MAX_RADIUS;
+        }
+        return radius;
+    }
+
 }

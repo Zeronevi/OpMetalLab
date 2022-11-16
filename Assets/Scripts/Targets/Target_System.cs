@@ -7,6 +7,9 @@ public class Target_System : MonoBehaviour
     [SerializeField] public Target default_target;
     [SerializeField] private Target currentTarget = null;
 
+    [SerializeField] public Color NORMAL_COLOR = Color.red;
+    [SerializeField] public Color DISABLE_COLOR = Color.red;
+
     private void Start()
     {
         if (currentTarget == null) default_target.Disable(); 
@@ -27,6 +30,11 @@ public class Target_System : MonoBehaviour
     public Target GetTarget()
     {
         return currentTarget;
+    }
+
+    public void SetColor(Color cor)
+    {
+        currentTarget.SetColor(cor);
     }
 
 }

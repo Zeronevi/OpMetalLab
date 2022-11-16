@@ -14,7 +14,6 @@ public abstract class Weapon : MonoBehaviour
     public static int IFINITE_AMMO = -1;
     protected int AMMO_PER_PACKAGE = 30;
 
-    private bool isWaiting = false;
     protected float TIME_SHOOTS = 1f;
 
     private bool reloading = false;
@@ -63,7 +62,7 @@ public abstract class Weapon : MonoBehaviour
 
     public bool isAvaliable()
     {
-        return (!isWaiting);
+        return  !(time > 0 || (ammo_in_weapon == 0 && !isWhiteWeapon()));
     }
 
     public void Reload()
@@ -78,6 +77,7 @@ public abstract class Weapon : MonoBehaviour
     public void Shoot(GameObject bullet, Vector2 position, Quaternion rotation, Vector2 positionToFire)
     {
         Vector2 dir = positionToFire - position;
+        
         var objBullet = Instantiate(bullet, position, rotation);
         objBullet.GetComponent<Rigidbody2D>().velocity =
             bulletSpeed * dir.normalized;
@@ -146,7 +146,6 @@ public abstract class Weapon : MonoBehaviour
     public void ResetTime()
     {
         reloading = false;
-        isWaiting = false;
         time = 0;
     }
 
@@ -204,5 +203,11 @@ public abstract class Weapon : MonoBehaviour
     public Target GetTarget()
     {
         return target;
+    }
+
+    protected bool whiteWeapon = false;
+    public bool isWhiteWeapon()
+    {
+        return whiteWeapon;
     }
 }

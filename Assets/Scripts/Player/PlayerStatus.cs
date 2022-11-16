@@ -5,8 +5,12 @@ using UnityEngine;
 public class PlayerStatus : MonoBehaviour
 {
 
-    public static float MAX_LIFE = 1200.0f;
+    public static float MAX_LIFE = 20.0f;
     [SerializeField] private float current_life = MAX_LIFE;
+
+    public static float MAX_ENERGY = 20.0f;
+    [SerializeField] private float current_energy = MAX_LIFE;
+    [SerializeField] private float speed_energy = 1f;
 
     public static void SetCurrentLife(float life)
     {
@@ -21,6 +25,24 @@ public class PlayerStatus : MonoBehaviour
         else return 0;
     }
 
+    public static float getCurrentEnergy()
+    {
+        PlayerStatus playerStatus = GetInstance();
+        if (playerStatus != null) return playerStatus.current_energy;
+        else return 0;
+    }
+
+    public static bool hasEnergy(float energy)
+    {
+        return (energy <= playerStatus.current_energy);
+    }
+
+    public static void takeSomeEnergy(float energy)
+    {
+        playerStatus.current_energy -= energy;
+        if (playerStatus.current_energy < 0) playerStatus.current_energy = 0;
+    }
+
     private static PlayerStatus playerStatus = null;
     
     public static PlayerStatus GetInstance()
@@ -31,6 +53,12 @@ public class PlayerStatus : MonoBehaviour
     {
         current_life = MAX_LIFE;
         PlayerStatus.playerStatus = this;
+    }
+
+    private void FixedUpdate()
+    {
+        current_energy += speed_energy * Time.deltaTime;
+        if (current_energy > MAX_ENERGY) current_energy = MAX_ENERGY;
     }
 
     [SerializeField] Cone_vision vision = null; 
