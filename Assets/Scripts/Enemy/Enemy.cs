@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,6 +20,12 @@ public class Enemy : MonoBehaviour
     private int _patrolPointIndex;
     private const float Epsilon = 0.3f;
 
+    private enum SpinCondition
+    { NotSpun, Spinning, Spun }
+    private SpinCondition _spinCondition = SpinCondition.NotSpun;
+    private const float SpinDelay = .25f;
+    private Coroutine _spinning;
+    
     //--Visao
     public LayerMask mask;
     public GameObject player;
@@ -53,6 +60,19 @@ public class Enemy : MonoBehaviour
         enemyList.Add(this.gameObject.GetComponent<Enemy>());
 
         _state = startingState;
+
+        switch (_state)
+        {
+            case EnemyState.Idle: 
+                EnterIdle();
+                break;
+            case EnemyState.Patrol:
+                EnterPatrol();
+                break;
+            default:
+                EnterIdle();
+                break;
+        }
     }
 
     // Update is called once per frame
@@ -62,8 +82,8 @@ public class Enemy : MonoBehaviour
 
         bool canSeePlayer = FindPlayer();
         
-        this.transform.rotation =
-            Quaternion.Euler(0, 0, (_state == EnemyState.Chase) ? (_playerDirectionAngle) : (_angle));
+        if(_spinCondition != SpinCondition.Spinning)
+            this.transform.rotation = Quaternion.Euler(0, 0, (_state == EnemyState.Chase) ? (_playerDirectionAngle) : (_angle));
         
         switch(_state)
         {
@@ -90,30 +110,29 @@ public class Enemy : MonoBehaviour
 
     private void PatrolUpdate()
     {
-        //TODO>Fazer
-        //if(flag da rodadinha == rodando)
-        // return
+        if (_spinCondition == SpinCondition.Spinning) 
+            return;
         
         if(Vector2.Distance(transform.position, patrolPoints[_patrolPointIndex].transform.position) < Epsilon)
-        {  
-            //if(flag da rodadinha == nao rodou)
-                //flag da rodadinha = rodando;
-                //startcoroutine(rodadinha);
-                //return
-            
-            //depois de ter rodado:
-            _patrolPointIndex = (_patrolPointIndex + 1) % patrolPoints.Count;
-            SetDestination(patrolPoints[_patrolPointIndex].transform.position);
+        {
+            if (_spinCondition == SpinCondition.NotSpun)
+            {
+               _spinning = StartCoroutine(Spin());
+            }
+            else if(_spinCondition == SpinCondition.Spun)
+            {
+                _spinning = null;
+                _spinCondition = SpinCondition.NotSpun;
+                //vai pro próximo ponto de patrulha.
+                _patrolPointIndex = (_patrolPointIndex + 1) % patrolPoints.Count;
+                SetDestination(patrolPoints[_patrolPointIndex].transform.position);
+            }
         }
     }
 
     private void InvestigateUpdate()
     {
-        //TODO>FAZER
-        //Vai pro ponto de investigação
-        //dah uma rodadinha
-        
-        //voltar para patrulha no caso da posicao do som nao ter nada, setar som da investigacao para nulo
+        //TODO ir pro lugar e dar uma rodadinha
     }
 
     private void ChaseUpdate(bool seesPlayer)
@@ -139,11 +158,10 @@ public class Enemy : MonoBehaviour
         SetDestination(patrolPoints[0].transform.position);
     }
     
-    private void EnterInvestigate()
+    private void EnterInvestigate(Vector3 position)
     {
         _state = EnemyState.Investigate;
-        //--AHHH, ME ajudem ouvi algo
-        //Setar cabeça amarela
+        SetDestination(position);
     }
 
     private void EnterChase()
@@ -151,7 +169,9 @@ public class Enemy : MonoBehaviour
         _state = EnemyState.Chase;
         Debug.Log(this.name + " entrou estado de perseguição, cuidado!!!");
         statusIndicator.SetActive(true); //Setar cabeça vermelha
-        //Alertar guardas proximos
+        
+        if(_spinning != null)
+            StopCoroutine(_spinning);
         StartCoroutine(ChaseRoutine());
     }
     
@@ -169,10 +189,17 @@ public class Enemy : MonoBehaviour
     {
         _playerDirection = (player.transform.position - transform.position);
         _playerDirectionAngle = (180/math.PI) * math.atan2(_playerDirection.y,_playerDirection.x);
-
-        RaycastHit2D hit = Physics2D.Raycast(transform.position,_playerDirection,20f,layerMask:mask);
         
-        if (hit.collider.gameObject.CompareTag("Player") && math.abs(_playerDirectionAngle-transform.rotation.z) < fov){
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, _playerDirection,200f,layerMask:mask);
+        
+        Debug.Log(_playerDirectionAngle.ToString() + ' ' + (this.transform.localRotation.eulerAngles.z).ToString() + " " + math.abs(Mathf.DeltaAngle(_playerDirectionAngle,this.transform.localRotation.eulerAngles.z)));
+        Debug.DrawRay(this.transform.position,_playerDirection);
+        
+        
+        
+        if (hit.collider.gameObject.CompareTag("Player") && math.abs(Mathf.DeltaAngle(_playerDirectionAngle,transform.localRotation.eulerAngles.z)) < fov)
+        {
+            _spinCondition = SpinCondition.NotSpun;
             if (_state != EnemyState.Chase)
             {
                 EnterChase();
@@ -186,15 +213,16 @@ public class Enemy : MonoBehaviour
     
     public void Listen(Noise noise)
     {
+        if (_state == EnemyState.Chase) return;
+            
         float dist = Vector2.Distance(this.transform.position, noise.Position);
-        float intensity = noise.Strength / (dist*dist);
 
-        if (intensity >= SoundThreshold && 
+        if (dist > noise.Strength && 
             (_investigationTarget == null || _investigationTarget?.soundType < noise.soundType))
         {
             _state = EnemyState.Investigate;
             _investigationTarget = noise;
-            SetDestination(noise.Position);
+            EnterInvestigate(noise.Position);
         }
     }
 
@@ -232,4 +260,17 @@ public class Enemy : MonoBehaviour
                 SetDestination(player.transform.position);
         }
     }
+
+    private IEnumerator Spin()
+    {
+        _spinCondition = SpinCondition.Spinning;
+        for (int i = 0; i < 360; i += 1)
+        {
+            transform.Rotate(new Vector3(0,0,1));
+            yield return new WaitForSeconds((float)1/120);
+        }
+
+        _spinCondition = SpinCondition.Spun;
+    }
+    
 }
