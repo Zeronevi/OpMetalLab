@@ -5,8 +5,9 @@ using UnityEngine;
 public class PlayerStatus : MonoBehaviour
 {
 
-    public static float MAX_LIFE = 20.0f;
-    [SerializeField] private float current_life = MAX_LIFE;
+    public static float MAX_LIFE = 1200.0f;
+    //[SerializeField] private float current_life = MAX_LIFE;
+    public float current_life = MAX_LIFE;
 
     public static float MAX_ENERGY = 20.0f;
     [SerializeField] private float current_energy = MAX_LIFE;
@@ -75,7 +76,7 @@ public class PlayerStatus : MonoBehaviour
             vision.SetReferenceViewDistance(viewDistance);
         } else
         {
-            print("Não foi definido o cone de visão!");
+            print("Nï¿½o foi definido o cone de visï¿½o!");
         }
     }
 
@@ -88,7 +89,7 @@ public class PlayerStatus : MonoBehaviour
         }
         else
         {
-            print("Não foi definido main_character");
+            print("Nï¿½o foi definido main_character");
         }
     }
 
@@ -100,7 +101,7 @@ public class PlayerStatus : MonoBehaviour
             return player_inventory.getSelectedWeapon();
         } else
         {
-            print("Não foi definido o inventorio do player!");
+            print("Nï¿½o foi definido o inventorio do player!");
         }
 
         return null;
