@@ -16,15 +16,7 @@ public class MainCharacter : MonoBehaviour
     Vector2 _velocity;
     private Rigidbody2D _rb;
     private bool _canMove = true;
-
-    //Depois refatorar em nova classe1
-    public GameObject bullet, gunBarrel;
-    public int numb_of_bullets = 30;
-    public float bulletSpeed;
     
-
-    public AudioSource sfx_effects;
-    public AudioClip shoot_Sound, noammo_Sound;
 
     void Start()
     {
@@ -36,13 +28,6 @@ public class MainCharacter : MonoBehaviour
     void Update()
     {
         LookAtMouse();
-        if(wp.weapons.Count > 0)
-        {
-            if (Input.GetKeyDown(KeyCode.Mouse0)) Shoot();
-        }
-
-
-        
         Move();
     }
 
@@ -63,28 +48,7 @@ public class MainCharacter : MonoBehaviour
         if (_canMove) _rb.velocity = _velocity*speed;
     }
 
-    void Shoot()
-    {
-        if (numb_of_bullets > 0)
-        {
-            sfx_effects.clip = shoot_Sound;
-            sfx_effects.Play();
-            var objBullet = Instantiate(this.bullet, gunBarrel.transform.position, bullet.transform.rotation);
-            objBullet.GetComponent<Rigidbody2D>().velocity =
-                bulletSpeed * (SharedContent.MousePosition - (Vector2)transform.position).normalized;
-            numb_of_bullets = numb_of_bullets - 1;
-            NoiseSystem.MakeNoise(transform.position, 5f);
-        }
-        else
-        {
-
-            sfx_effects.clip = noammo_Sound;
-            sfx_effects.Play();
-        }
-
-    }
-
-    private void OnTriggerEnter2D(Collider2D objCol)
+    /*private void OnTriggerEnter2D(Collider2D objCol)
     {
         //Ammo ammo = objCol.GetComponent<>();
         Ammo ammo = objCol.GetComponent<Ammo>();
@@ -100,7 +64,7 @@ public class MainCharacter : MonoBehaviour
 
 
 
-    }
+    }*/
 
     public void SetSpeed(float value)
     {

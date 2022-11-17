@@ -215,4 +215,14 @@ public class Weapon : MonoBehaviour
         return whiteWeapon;
     }
 
+    public bool HasAmmoInWeapon()
+    {
+        return ammo_in_weapon > 0;
+    }
+
+    public bool isWaiting()
+    {
+        return time > 0;
+    }
+
 }

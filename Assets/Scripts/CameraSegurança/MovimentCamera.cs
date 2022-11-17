@@ -14,6 +14,9 @@ public class MovimentCamera : MonoBehaviour
     [SerializeField] private GameObject vision = null;
 
     [SerializeField] Animator animator;
+    [SerializeField] AudioClip estaticaAudio;
+    [SerializeField] AudioClip explosionAudio;
+    [SerializeField] AudioSource audioSource;
 
     private float current_angle;
     private float current_speed;
@@ -32,6 +35,7 @@ public class MovimentCamera : MonoBehaviour
         current_speed = angular_speed;
         initial_angle = transform.rotation.eulerAngles.z;
         animator = transform.GetComponentInChildren<Animator>();
+        audioSource = GetComponent<AudioSource>();
         life = MAX_LIFE;
         energy = ENERGY_MAX;
     }
@@ -110,12 +114,28 @@ public class MovimentCamera : MonoBehaviour
     public void Dano(float dano)
     {
         life -= dano;
+
         if (life <= 0)
         {
             working = false;
             vision.SetActive(false);
             animator.SetBool("Fail", true);
+
+            audioSource.Stop();
+            audioSource.clip = explosionAudio;
+            audioSource.loop = false;
+            audioSource.maxDistance = 100f;
+            audioSource.Play();
+
             Destroy(this, 3f);
+
+        } else if (life <= 150)
+        {
+            audioSource.Stop();
+            audioSource.clip = estaticaAudio;
+            audioSource.loop = true;
+            audioSource.maxDistance = 10f;
+            audioSource.Play();
         }
     }
 }

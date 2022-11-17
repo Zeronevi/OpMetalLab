@@ -7,7 +7,6 @@ public class Bullet : MonoBehaviour
 {
 
     [SerializeField] private float damage;
-    public int damage = 10;
     public GameObject bloodEffect;
     public PlayerStatus ps;
     
@@ -33,6 +32,7 @@ public class Bullet : MonoBehaviour
     public float GetDamage()
     {
         return this.damage;
+    }
 
     private void OnTriggerEnter2D(Collider2D hitInfo)
     {

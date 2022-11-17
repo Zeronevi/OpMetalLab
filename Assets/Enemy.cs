@@ -41,6 +41,8 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
+        gameObject.SetActive(false);
+        Enemy.enemyList.Remove(this.gameObject);
         Destroy(this.gameObject);
     }
     public void takeDamage(int damage)

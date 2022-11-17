@@ -176,11 +176,18 @@ public class WeaponSystem : MonoBehaviour
     {
         Target playerTarget = targetSystem.GetTarget();
         Weapon weapon = playerInventory.getSelectedWeapon();
-        if (playerTarget == null || !playerInventory.isSelected() || !weapon.CanShoot()) return;
-        
+        if (playerTarget == null || !playerInventory.isSelected()) return;
 
-        Vector2 positionToFire = playerTarget.GetPositionTarget();  
-        weapon.Shoot(this.bullet, gunBarrel.transform.position, bullet.transform.rotation, positionToFire);
+        if (weapon.CanShoot())
+        {
+            Vector2 positionToFire = playerTarget.GetPositionTarget();
+            weapon.Shoot(this.bullet, gunBarrel.transform.position, bullet.transform.rotation, positionToFire);
+            AudioSystem.GetInstance().Shoot(false, gunBarrel.transform.position);
+
+        } else if(Input.GetKeyDown(KeyCode.Mouse0) && !weapon.isWaiting())
+        {
+            AudioSystem.GetInstance().Shoot(true, gunBarrel.transform.position);
+        }
     }
 
     public void ReloadWeapon()
