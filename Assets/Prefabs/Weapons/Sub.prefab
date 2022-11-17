@@ -387,7 +387,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1977608963140470640}
   - component: {fileID: 4229863637965317787}
-  - component: {fileID: 1163718099011891210}
+  - component: {fileID: 6227328178149898899}
   m_Layer: 0
   m_Name: Sub
   m_TagString: Untagged
@@ -438,7 +438,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 5.0714664, y: 3.1900678}
   m_EdgeRadius: 0
---- !u!114 &1163718099011891210
+--- !u!114 &6227328178149898899
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -447,10 +447,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 2283737552393508072}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f4ed6f332d45b340b5e4008606be4cf, type: 3}
+  m_Script: {fileID: 11500000, guid: 0641cace90f49444cb1825471c5bbe16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 0}
+  AMMO_PER_PACKAGE: 120
+  TIME_SHOOTS: 0.05
+  TIME_RELOAD: 2
+  total_ammo: 0
+  ammo_in_weapon: 0
+  bulletSpeed: 30
+  bulletDamage: 20
+  bulletNoise: 5
+  speed_on_target: 10
+  fov_on_target: 90
+  viewDistance_on_target: 10
+  radius_on_target: 1
 --- !u!1 &3600780993820246228
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Weapon : MonoBehaviour
+public class Weapon : MonoBehaviour
 {
     private GameObject superior;
     private GameObject lateral;
@@ -12,26 +12,27 @@ public abstract class Weapon : MonoBehaviour
     public static int DEFAULT_VALUE = -10;
 
     public static int IFINITE_AMMO = -1;
-    protected int AMMO_PER_PACKAGE = 30;
+    [SerializeField] protected int AMMO_PER_PACKAGE = 30;
 
-    protected float TIME_SHOOTS = 1f;
+    [SerializeField] protected float TIME_SHOOTS = 1f;
 
     private bool reloading = false;
-    protected float TIME_RELOAD = 1.5f;
+    [SerializeField] protected float TIME_RELOAD = 1.5f;
 
     private float time = 0f;
 
-    protected int total_ammo = 0;
-    protected int ammo_in_weapon = 0;
+    [SerializeField] protected int total_ammo = 0;
+    [SerializeField] protected int ammo_in_weapon = 0;
 
-    protected float bulletSpeed = 25f;
-    protected float bulletNoise = 5f;
+    [SerializeField] protected float bulletSpeed = 25f;
+    [SerializeField] protected float bulletDamage = 20f;
+    [SerializeField] protected float bulletNoise = 5f;
 
-    protected float speed_on_target = DEFAULT_VALUE;
-    protected float fov_on_target = DEFAULT_VALUE;
-    protected float viewDistance_on_target = DEFAULT_VALUE;
+    [SerializeField] protected float speed_on_target = DEFAULT_VALUE;
+    [SerializeField] protected float fov_on_target = DEFAULT_VALUE;
+    [SerializeField] protected float viewDistance_on_target = DEFAULT_VALUE;
 
-    protected float radius_on_target = 0.1f;
+    [SerializeField] protected float radius_on_target = 0.1f;
 
     protected BoxCollider2D weaponCollider;
 
@@ -39,6 +40,7 @@ public abstract class Weapon : MonoBehaviour
     {
         this.lateral = transform.GetChild(0).gameObject;
         this.superior = transform.GetChild(1).gameObject;
+        weaponCollider = GetComponent<BoxCollider2D>();
     }
     protected virtual void Start()
     { 
@@ -79,6 +81,8 @@ public abstract class Weapon : MonoBehaviour
         Vector2 dir = positionToFire - position;
         
         var objBullet = Instantiate(bullet, position, rotation);
+
+        objBullet.GetComponent<Bullet>().SetDamage(bulletDamage);
         objBullet.GetComponent<Rigidbody2D>().velocity =
             bulletSpeed * dir.normalized;
 
@@ -210,4 +214,5 @@ public abstract class Weapon : MonoBehaviour
     {
         return whiteWeapon;
     }
+
 }

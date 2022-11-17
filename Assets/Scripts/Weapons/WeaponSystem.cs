@@ -9,6 +9,7 @@ public class WeaponSystem : MonoBehaviour
     [SerializeField] private WeaponInventory inventoryScene = null;
     [SerializeField] private WeaponInventory playerInventory = null;
     [SerializeField] private Target_System targetSystem = null;
+    [SerializeField] private TextSpeakSystem textBoxSystem = null;
 
     private GameObject player;
     private BoxCollider2D playerCollider;
@@ -136,22 +137,37 @@ public class WeaponSystem : MonoBehaviour
 
     public void takeWeapon()
     {
-        if (!Input.GetKeyDown(KeyCode.E)) return;
-
+        
         if(playerInventory.GetSize() >= MAX_INVENTORY_PLAYER) return;
 
-        for(int index = 0; index < inventoryScene.GetSize(); index++)
+        int targetWeaponIndex = -1;
+        Weapon targetWeapon = null;
+        bool found = false;
+        for(int index = 0; index < inventoryScene.GetSize() & !found; index++)
         {
             Weapon weapon = inventoryScene.getWeapon(index);
             BoxCollider2D weaponCollider = weapon.GetCollider();
            
             if(weaponCollider.bounds.Intersects(playerCollider.bounds))
             {
-                inventoryScene.removeWeapon(index);
-                playerInventory.addWeapon(weapon);
-                AdjustTarget();
-                return;
+                targetWeaponIndex = index;
+                targetWeapon = weapon;
+                found = true;
             }
+        }
+
+        if (Input.GetKeyDown(KeyCode.E) && targetWeapon != null)
+        {
+            inventoryScene.removeWeapon(targetWeaponIndex);
+            playerInventory.addWeapon(targetWeapon);
+            AdjustTarget();
+            return;
+        } else if(targetWeapon != null && textBoxSystem != null)
+        {
+            textBoxSystem.ShowActionBox();
+        } else if(textBoxSystem != null)
+        {
+            textBoxSystem.HideActionBox();
         }
 
     }

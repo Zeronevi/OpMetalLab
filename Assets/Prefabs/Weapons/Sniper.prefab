@@ -682,7 +682,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3104521892764793303}
   - component: {fileID: 4806507398048276167}
-  - component: {fileID: 7074653783594673723}
+  - component: {fileID: 2555159254665841703}
   m_Layer: 8
   m_Name: Sniper
   m_TagString: Untagged
@@ -733,7 +733,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 4.69315, y: 1.5069373}
   m_EdgeRadius: 0
---- !u!114 &7074653783594673723
+--- !u!114 &2555159254665841703
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -742,9 +742,22 @@ MonoBehaviour:
   m_GameObject: {fileID: 5546768919588172264}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6790dc6cd6950894b9bc28404809fd21, type: 3}
+  m_Script: {fileID: 11500000, guid: 0641cace90f49444cb1825471c5bbe16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  AMMO_PER_PACKAGE: 12
+  TIME_SHOOTS: 5
+  TIME_RELOAD: 5
+  total_ammo: 0
+  ammo_in_weapon: 0
+  bulletSpeed: 50
+  bulletDamage: 100
+  bulletNoise: 5
+  speed_on_target: 5
+  fov_on_target: 5
+  viewDistance_on_target: 120
+  radius_on_target: 0.1
 --- !u!1 &6821977093490628037
 GameObject:
   m_ObjectHideFlags: 0

@@ -169,6 +169,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e463b9881444c624cb3e9f6053f609cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  current_life: 20
+  current_energy: 20
+  speed_energy: 1
   vision: {fileID: 5492891448240033246}
   player_inventory: {fileID: 5056893064554054428}
   main_character: {fileID: 2041912733884068357}

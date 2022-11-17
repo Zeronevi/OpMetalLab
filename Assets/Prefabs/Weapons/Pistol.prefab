@@ -129,8 +129,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2350981228643431171}
-  - component: {fileID: 4372308193591076370}
   - component: {fileID: 5690051277916772979}
+  - component: {fileID: 2294214324507143317}
   m_Layer: 8
   m_Name: Pistol
   m_TagString: Untagged
@@ -155,19 +155,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4372308193591076370
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1350486671513126984}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aaa4fdf3451fea743a07b987fc35493b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
 --- !u!61 &5690051277916772979
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -178,7 +165,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0.80428034, y: 0.08298129}
@@ -194,6 +181,31 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.2297944, y: 0.8340374}
   m_EdgeRadius: 0
+--- !u!114 &2294214324507143317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1350486671513126984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0641cace90f49444cb1825471c5bbe16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  AMMO_PER_PACKAGE: 30
+  TIME_SHOOTS: 1
+  TIME_RELOAD: 2
+  total_ammo: 0
+  ammo_in_weapon: 0
+  bulletSpeed: 25
+  bulletDamage: 20
+  bulletNoise: 5
+  speed_on_target: -10
+  fov_on_target: -10
+  viewDistance_on_target: -10
+  radius_on_target: 0.1
 --- !u!1 &2400782731030804249
 GameObject:
   m_ObjectHideFlags: 0
