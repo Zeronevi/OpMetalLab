@@ -5,9 +5,11 @@ using UnityEngine;
 public abstract class Target : MonoBehaviour
 {
     public static float DEFAULT_RADIUS = 0.75f;
-    public static float DEFAULT_KP_CONTROL = 0.3f;
+    public static float DEFAULT_KP_CONTROL = 0.7f;
     public static float DEFAULT_KI_CONTROL = 0.3f;
     public static float DEFAULT_KD_CONTROL = 1f;
+
+    protected Color color = Color.red;
 
     // Start is called before the first frame update
     protected abstract void Start();
@@ -48,5 +50,10 @@ public abstract class Target : MonoBehaviour
     public void Disable()
     {
         gameObject.SetActive(false);
+    }
+
+    public void SetColor(Color color)
+    {
+        this.color = color;
     }
 }

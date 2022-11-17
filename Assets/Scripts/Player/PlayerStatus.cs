@@ -9,6 +9,10 @@ public class PlayerStatus : MonoBehaviour
     //[SerializeField] private float current_life = MAX_LIFE;
     public float current_life = MAX_LIFE;
 
+    public static float MAX_ENERGY = 20.0f;
+    [SerializeField] private float current_energy = MAX_LIFE;
+    [SerializeField] private float speed_energy = 1f;
+
     public static void SetCurrentLife(float life)
     {
         PlayerStatus playerStatus = GetInstance();
@@ -22,6 +26,24 @@ public class PlayerStatus : MonoBehaviour
         else return 0;
     }
 
+    public static float getCurrentEnergy()
+    {
+        PlayerStatus playerStatus = GetInstance();
+        if (playerStatus != null) return playerStatus.current_energy;
+        else return 0;
+    }
+
+    public static bool hasEnergy(float energy)
+    {
+        return (energy <= playerStatus.current_energy);
+    }
+
+    public static void takeSomeEnergy(float energy)
+    {
+        playerStatus.current_energy -= energy;
+        if (playerStatus.current_energy < 0) playerStatus.current_energy = 0;
+    }
+
     private static PlayerStatus playerStatus = null;
     
     public static PlayerStatus GetInstance()
@@ -32,6 +54,12 @@ public class PlayerStatus : MonoBehaviour
     {
         current_life = MAX_LIFE;
         PlayerStatus.playerStatus = this;
+    }
+
+    private void FixedUpdate()
+    {
+        current_energy += speed_energy * Time.deltaTime;
+        if (current_energy > MAX_ENERGY) current_energy = MAX_ENERGY;
     }
 
     [SerializeField] Cone_vision vision = null; 
@@ -48,7 +76,7 @@ public class PlayerStatus : MonoBehaviour
             vision.SetReferenceViewDistance(viewDistance);
         } else
         {
-            print("Não foi definido o cone de visão!");
+            print("Nï¿½o foi definido o cone de visï¿½o!");
         }
     }
 
@@ -61,7 +89,7 @@ public class PlayerStatus : MonoBehaviour
         }
         else
         {
-            print("Não foi definido main_character");
+            print("Nï¿½o foi definido main_character");
         }
     }
 
@@ -73,7 +101,7 @@ public class PlayerStatus : MonoBehaviour
             return player_inventory.getSelectedWeapon();
         } else
         {
-            print("Não foi definido o inventorio do player!");
+            print("Nï¿½o foi definido o inventorio do player!");
         }
 
         return null;

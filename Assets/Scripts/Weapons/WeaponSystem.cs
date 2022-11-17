@@ -24,52 +24,7 @@ public class WeaponSystem : MonoBehaviour
         this.inventoryScene.ShowAllDropped();
     }
 
-    private bool shooting = false;
-    private bool target = false;
-    private bool running = false;
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
-        {
-            shooting = true;
-        } else if(Input.GetKeyUp(KeyCode.Mouse0))
-        {
-            shooting = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-        {
-            target = true;
-        }
-        else if (Input.GetKeyUp(KeyCode.Mouse1))
-        {
-            target = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.LeftShift))
-        {
-            running = true;
-        }
-        else if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            running = false;
-        }
-
-        selectWeapon();
-        dropWeapon();
-        takeWeapon();
-        ReloadWeapon();
-        MaybeShoot();
-        AdjustParameters();
-       
-    }
-
-    private void MaybeShoot()
-    {
-        if (shooting) Shoot();
-    }
-
-    private void AdjustParameters()
+    public void AdjustParameters(bool target, bool running)
     {
         if (target && playerInventory.isSelected())
         {
@@ -90,7 +45,7 @@ public class WeaponSystem : MonoBehaviour
             if(playerTarget != null)
             {
                 playerTarget.setCorrectRadius(weapon.GetRadiusOnTarget());
-                playerTarget.setControl(10f, 1f, 10f);
+                playerTarget.setControl(0.7f, 0.3f, 10f);
             }
             
         }
@@ -117,7 +72,7 @@ public class WeaponSystem : MonoBehaviour
         }
     }
 
-    private void selectWeapon()
+    public void selectWeapon()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
@@ -138,7 +93,7 @@ public class WeaponSystem : MonoBehaviour
         }
     }
 
-    private void AdjustTarget()
+    public void AdjustTarget()
     {
         Weapon weapon = playerInventory.getSelectedWeapon();
         if(weapon == null) 
@@ -156,9 +111,19 @@ public class WeaponSystem : MonoBehaviour
         {
             targetSystem.SetCurrentTarget(referenceTarget);
         }
+
     }
 
-    private void dropWeapon()
+    public void UpdateTarget()
+    {
+        Weapon weapon = playerInventory.getSelectedWeapon();
+        if (weapon == null) return;
+        
+        if (!weapon.isAvaliable()) targetSystem.SetColor(targetSystem.DISABLE_COLOR);
+        else targetSystem.SetColor(targetSystem.NORMAL_COLOR);
+    }
+
+    public void dropWeapon()
     {
         if(Input.GetKeyDown(KeyCode.Backspace) && playerInventory.isSelected())
         {
@@ -191,7 +156,7 @@ public class WeaponSystem : MonoBehaviour
 
     }
 
-    void Shoot()
+    public void Shoot()
     {
         Target playerTarget = targetSystem.GetTarget();
         Weapon weapon = playerInventory.getSelectedWeapon();
@@ -202,7 +167,7 @@ public class WeaponSystem : MonoBehaviour
         weapon.Shoot(this.bullet, gunBarrel.transform.position, bullet.transform.rotation, positionToFire);
     }
 
-    private void ReloadWeapon()
+    public void ReloadWeapon()
     {
         if (Input.GetKeyDown(KeyCode.R))
         {

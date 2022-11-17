@@ -54,7 +54,7 @@ public class Weapon_hud : MonoBehaviour
     private void UpdateWeapon()
     {
         Weapon weapon = playerInventory.getSelectedWeapon();
-        if(weapon == null)
+        if(weapon == null || weapon.isWhiteWeapon())
         {
             text.SetText("-- // --");
         } else

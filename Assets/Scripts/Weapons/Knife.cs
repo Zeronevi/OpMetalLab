@@ -9,6 +9,7 @@ public class Knife : Weapon
     {
         base.Start();
         AMMO_PER_PACKAGE = Weapon.IFINITE_AMMO;
+        whiteWeapon = true;
         TIME_SHOOTS = 0.5f;
         TIME_RELOAD = 0f;
 
