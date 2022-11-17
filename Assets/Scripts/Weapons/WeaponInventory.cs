@@ -7,7 +7,8 @@ public class WeaponInventory : MonoBehaviour
     public static int NOT_SELECTED = -1;
     public static int NOT_FOUND = -2;
 
-    [SerializeField] private List<Weapon> weapons;
+    [SerializeField] public List<Weapon> weapons;
+    //public List<Weapon> weapons;
     private int indexSelectedWeapon;
 
     [SerializeField] bool isPlayer;
@@ -95,6 +96,8 @@ public class WeaponInventory : MonoBehaviour
     }
     private void Update()
     {
+
+
         if (isPlayer && indexSelectedWeapon != NOT_SELECTED)
         {
             weapons[indexSelectedWeapon].transform.position = transform.position;

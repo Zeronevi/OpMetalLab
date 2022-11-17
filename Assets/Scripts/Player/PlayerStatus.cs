@@ -6,7 +6,8 @@ public class PlayerStatus : MonoBehaviour
 {
 
     public static float MAX_LIFE = 1200.0f;
-    [SerializeField] private float current_life = MAX_LIFE;
+    //[SerializeField] private float current_life = MAX_LIFE;
+    public float current_life = MAX_LIFE;
 
     public static void SetCurrentLife(float life)
     {
