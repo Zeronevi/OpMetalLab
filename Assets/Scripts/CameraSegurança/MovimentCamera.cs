@@ -40,6 +40,11 @@ public class MovimentCamera : MonoBehaviour
         energy = ENERGY_MAX;
     }
 
+    public void setInitialAngle(float angle)
+    {
+        this.initial_angle = angle;
+    }
+
     // Update is called once per frame
     void FixedUpdate()
     {
