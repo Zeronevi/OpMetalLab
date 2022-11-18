@@ -7,7 +7,6 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody2D))]
 public class MainCharacter : MonoBehaviour
 {
-    
     public float speed;
     Vector2 _velocity;
     private Rigidbody2D _rb;
@@ -55,6 +54,6 @@ public class MainCharacter : MonoBehaviour
         objBullet.GetComponent<Rigidbody2D>().velocity = 
             bulletSpeed*(SharedContent.MousePosition - (Vector2)transform.position).normalized;
         
-        NoiseSystem.MakeNoise(transform.position,15f,Noise.SoundType.Gunshot);
+        NoiseSystem.MakeNoise(transform.position,10f,Noise.SoundType.Gunshot);
     }
 }

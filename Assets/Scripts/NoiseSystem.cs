@@ -16,14 +16,9 @@ public class NoiseSystem : MonoBehaviour
         Noises = new List<Noise>();
     }
 
-    public void Update()
+    public static void MakeNoise(Vector2 position, float strength, Noise.SoundType soundType)
     {
-        DebugInfo();
-    }
-
-    public static void MakeNoise(Vector2 position, float strenght, Noise.SoundType soundType)
-    {
-        Noise noise = new Noise(position, strenght, soundType);
+        Noise noise = new Noise(position, strength, soundType);
         foreach (Enemy enemy in Enemy.enemyList)
         {
             enemy.Listen(noise);
@@ -31,14 +26,7 @@ public class NoiseSystem : MonoBehaviour
         Noises.Add(noise);
     }
 
-    void DebugInfo()
-    {
-        if (Input.GetKeyDown(KeyCode.Mouse1)){
-            NoiseSystem.MakeNoise(SharedContent.MousePosition, 15f, Noise.SoundType.Gunshot);
-        }
-    }
-    
-    
+
     public void OnDrawGizmos()
     {
         //TODO: Desenhar os Gizmos
@@ -51,7 +39,6 @@ public class NoiseSystem : MonoBehaviour
         }
     }
 }
-
 
 public class Noise
 {

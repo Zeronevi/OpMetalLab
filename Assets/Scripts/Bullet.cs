@@ -12,9 +12,8 @@ public class Bullet : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D col)
     {
-            NoiseSystem.MakeNoise(transform.position,4f,Noise.SoundType.BulletHit);
+            NoiseSystem.MakeNoise(transform.position,6f,Noise.SoundType.BulletHit);
             Destroy(this);
-        
-        Destroy(this.gameObject);
+            Destroy(this.gameObject);
     }
 }

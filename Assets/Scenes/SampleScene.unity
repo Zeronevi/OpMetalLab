@@ -3039,6 +3039,10 @@ MonoBehaviour:
   health: 0
   maxHealth: 0
   delay: 0.5
+  gunBarrel: {fileID: 570960830}
+  bulletPrefab: {fileID: 9091873785384823381, guid: 523c7c2018eaed24fb76c8bda53c28ed, type: 3}
+  bulletSpeed: 6
+  bulletSpreadAngle: 9
   statusIndicator: {fileID: 355480461}
 --- !u!1 &1302702678
 GameObject:

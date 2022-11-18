@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Unity.Mathematics;
-
 public class Enemy : MonoBehaviour
 {
     public static List<Enemy> enemyList;
@@ -19,6 +18,7 @@ public class Enemy : MonoBehaviour
     public List<GameObject> patrolPoints;
     private int _patrolPointIndex;
     private const float Epsilon = 0.3f;
+    private const float InvEpsilon = 1.5f;
 
     private enum SpinCondition
     { NotSpun, Spinning, Spun }
@@ -45,7 +45,13 @@ public class Enemy : MonoBehaviour
     [SerializeField] private int health, maxHealth;
     [SerializeField] private float delay;
     private bool _canShoot = true;
-        //recarregar arma??
+    
+    public GameObject gunBarrel;
+    public GameObject bulletPrefab;
+    [Range(0, 20)] public float bulletSpeed;
+    [Range(0, 20)] public float bulletSpreadAngle;
+
+    //recarregar arma??
     
     //Misc.
     public GameObject statusIndicator;
@@ -55,7 +61,7 @@ public class Enemy : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
-
+        
         if (enemyList == null) enemyList = new List<Enemy>();
         enemyList.Add(this.gameObject.GetComponent<Enemy>());
 
@@ -84,6 +90,11 @@ public class Enemy : MonoBehaviour
         
         if(_spinCondition != SpinCondition.Spinning)
             this.transform.rotation = Quaternion.Euler(0, 0, (_state == EnemyState.Chase) ? (_playerDirectionAngle) : (_angle));
+        
+        
+        
+        //TODO ADICIONAR SFX e VISUALIZAÇÃO DE "PASSOS NO ESCURO"
+        //FORMATO: Corroutine
         
         switch(_state)
         {
@@ -132,7 +143,21 @@ public class Enemy : MonoBehaviour
 
     private void InvestigateUpdate()
     {
-        //TODO ir pro lugar e dar uma rodadinha
+        if(Vector2.Distance(transform.position, _investigationTarget.Position) < InvEpsilon)
+        {
+            if (_spinCondition == SpinCondition.NotSpun)
+            {
+                _spinning = StartCoroutine(Spin());
+            }
+            else if(_spinCondition == SpinCondition.Spun)
+            {
+                _spinning = null;
+                _spinCondition = SpinCondition.NotSpun;
+                _investigationTarget = null;
+                //volta para o modo de patrulha.
+                EnterPatrol();
+            }
+        } 
     }
 
     private void ChaseUpdate(bool seesPlayer)
@@ -155,12 +180,15 @@ public class Enemy : MonoBehaviour
         _state = EnemyState.Patrol;
         if(patrolPoints?.Count  < 2) EnterIdle();
         
-        SetDestination(patrolPoints[0].transform.position);
+        SetDestination(patrolPoints[_patrolPointIndex].transform.position);
     }
     
     private void EnterInvestigate(Vector3 position)
     {
         _state = EnemyState.Investigate;
+        if(_spinning != null)
+            StopCoroutine(_spinning);
+        _spinCondition = SpinCondition.NotSpun;
         SetDestination(position);
     }
 
@@ -192,10 +220,7 @@ public class Enemy : MonoBehaviour
         
         RaycastHit2D hit = Physics2D.Raycast(transform.position, _playerDirection,200f,layerMask:mask);
         
-        Debug.Log(_playerDirectionAngle.ToString() + ' ' + (this.transform.localRotation.eulerAngles.z).ToString() + " " + math.abs(Mathf.DeltaAngle(_playerDirectionAngle,this.transform.localRotation.eulerAngles.z)));
         Debug.DrawRay(this.transform.position,_playerDirection);
-        
-        
         
         if (hit.collider.gameObject.CompareTag("Player") && math.abs(Mathf.DeltaAngle(_playerDirectionAngle,transform.localRotation.eulerAngles.z)) < fov)
         {
@@ -217,7 +242,7 @@ public class Enemy : MonoBehaviour
             
         float dist = Vector2.Distance(this.transform.position, noise.Position);
 
-        if (dist > noise.Strength && 
+        if (dist < noise.Strength && 
             (_investigationTarget == null || _investigationTarget?.soundType < noise.soundType))
         {
             _state = EnemyState.Investigate;
@@ -230,15 +255,13 @@ public class Enemy : MonoBehaviour
     {
         if (_canShoot)
         { 
-            Debug.Log("<Barulho de Tiro>");
-            //var bullet = Instantiate(blabla);
-            //bullet.transform.position = gunBarrelEnd;
-            //float bulletAngle = angle + Random.range(-a,+a);
-            //Vector2 bulletDirection = new Vector2(math.cos(bulletAngle{???? precisa passar pra rad???}, math.sin(bulletAngle){??? mesma cooisa}));
-            //bullet.getComponent<RigidBody2D>().velocity = bulletDirection*bulletSpeed;
+            //TODO ADICIONAR SFX E VISUALIZAÇÃO DO SOM
+            var _bullet = Instantiate(bulletPrefab);
+            _bullet.transform.position = gunBarrel.transform.position;
             
-            //TODO Instanciar bala em direcao ao jogador
-            //TODO Sistema de balas do inimigo, que ignore outros inimigos
+            float bulletAngle = Mathf.Deg2Rad*(_playerDirectionAngle +  UnityEngine.Random.Range(-bulletSpreadAngle,bulletSpreadAngle));
+            Vector2 bulletDirection = new Vector2(math.cos(bulletAngle), math.sin(bulletAngle));
+            _bullet.GetComponent<Rigidbody2D>().velocity = bulletDirection*bulletSpeed;
             StartCoroutine(RateOfFireDelay());
         }
     }
