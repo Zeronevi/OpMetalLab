@@ -8,7 +8,9 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     public Vector2 moveTarget;
     public static List<GameObject> enemyList;
-    
+    public GameObject bloodEffect2;
+
+    public int health = 50;
     public NavMeshAgent _agent;
     
     void Start()
@@ -34,5 +36,26 @@ public class Enemy : MonoBehaviour
     {
         moveTarget = position;
         _agent.SetDestination(moveTarget);
+    }
+
+
+    private void Die()
+    {
+        gameObject.SetActive(false);
+        Enemy.enemyList.Remove(this.gameObject);
+        Destroy(this.gameObject);
+    }
+    public void takeDamage(int damage)
+    {
+        Debug.Log(damage);
+        health = health - damage;
+
+        //this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
+
+        if (health <= 0)
+        {
+            Instantiate(bloodEffect2, this.transform.position, transform.rotation);
+            Die();
+        }
     }
 }

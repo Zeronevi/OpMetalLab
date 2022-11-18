@@ -46,11 +46,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ba88a906fdde643b7804e98d44425f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  NORMAL_FOV: 40
+  TARGET_FOV: 20
+  NORMAL_VIEWDISTANCE: 20
+  TARGET_VIEWDISTANCE: 40
   rayCount: 50
   layerMask:
     serializedVersion: 2
     m_Bits: 0
-  automaticRefresh: 1
+  K_CONTROL_EXTEND_VIEWDISTANCE: 0.1
+  K_CONTROL_EXTEND_FOV: 0.1
+  controlled: 1
 --- !u!33 &1379514863924860223
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -79,7 +85,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 461f87183971d284093c7a0a5b4a7c79, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
