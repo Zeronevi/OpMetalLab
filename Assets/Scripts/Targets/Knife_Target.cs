@@ -48,9 +48,10 @@ public class Knife_Target : Target
     protected override void Draw()
     {
         float centerAngle = player.transform.rotation.eulerAngles.z;
-        Vector2 currentCenter = transform.position;
-        
-        for (int currentStep = 0; currentStep < steps; currentStep++)
+        Vector2 currentCenter = player.transform.position;
+
+        circleRender.positionCount = (steps + 1);
+        for (int currentStep = 0; currentStep <= steps; currentStep++)
         {
             float circunferenceProgress = (centerAngle + (((float)currentStep) / ((float)steps) - 1f/2f)* field_of_attack) * Mathf.PI/180f;
 

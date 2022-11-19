@@ -13,6 +13,7 @@ public class Enemy : MonoBehaviour
     public Vector2 moveTarget;
     public static List<GameObject> enemyList;
     public GameObject bloodEffect2;
+    public GameObject bloodEffect1;
 
     public float health = 100;
     public NavMeshAgent _agent;
@@ -56,7 +57,8 @@ public class Enemy : MonoBehaviour
         health = health - damage;
         if (life_bar != null) life_bar.SetLife(health / MAX_HEALTH);
 
-        //this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
+        var bloodE = Instantiate(bloodEffect1, gameObject.transform.position, transform.rotation);
+        Destroy(bloodE, 0.7f);
 
         if (health <= 0)
         {

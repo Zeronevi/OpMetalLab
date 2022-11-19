@@ -19,7 +19,7 @@ public class Weapon : MonoBehaviour
     private bool reloading = false;
     [SerializeField] protected float TIME_RELOAD = 1.5f;
 
-    private float time = 0f;
+    protected float time = 0f;
 
     [SerializeField] protected int total_ammo = 0;
     [SerializeField] protected int ammo_in_weapon = 0;
@@ -52,9 +52,16 @@ public class Weapon : MonoBehaviour
         this.total_ammo += ammo;
     }
 
-    public bool CanShoot()
+    public virtual bool CanShoot()
     {
-        return (time <= 0 && ammo_in_weapon > 0);
+        if (isWhiteWeapon())
+        {
+            return time <= 0;
+        }
+        else
+        {
+            return (time <= 0 && ammo_in_weapon > 0);
+        }
     }
 
     public int GetTotalAmmo()
@@ -76,7 +83,7 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public void Shoot(GameObject bullet, Vector2 position, Quaternion rotation, Vector2 positionToFire)
+    public virtual void Shoot(GameObject bullet, Vector2 position, Quaternion rotation, Vector2 positionToFire)
     {
         Vector2 dir = positionToFire - position;
         

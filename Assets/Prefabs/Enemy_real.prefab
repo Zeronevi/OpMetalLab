@@ -396,6 +396,10 @@ PrefabInstance:
       value: Enemy
       objectReference: {fileID: 0}
     - target: {fileID: 8933738064693551934, guid: e8f5dd89738a0914d8e64e3fcf5865f4, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8933738064693551934, guid: e8f5dd89738a0914d8e64e3fcf5865f4, type: 3}
       propertyPath: m_IsTrigger
       value: 1
       objectReference: {fileID: 0}
@@ -429,6 +433,7 @@ MonoBehaviour:
   MASTER_OBJ: {fileID: 4477241143539262497}
   moveTarget: {x: 0, y: 0}
   bloodEffect2: {fileID: 4227424330636120077, guid: 8993e5c6368f78148a5c94a8106a5477, type: 3}
+  bloodEffect1: {fileID: 7605376015754563760, guid: 1d28a010bcc0e52449025edb86b5c79b, type: 3}
   health: 50
   _agent: {fileID: 0}
 --- !u!195 &8189740149404508693

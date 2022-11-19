@@ -362,6 +362,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   target: {fileID: 8481052922227033033}
+  AMMO_PER_PACKAGE: 30
+  TIME_SHOOTS: 1
+  TIME_RELOAD: 1.5
+  total_ammo: 0
+  ammo_in_weapon: 0
+  bulletSpeed: 25
+  bulletDamage: 20
+  bulletNoise: 5
+  speed_on_target: -10
+  fov_on_target: -10
+  viewDistance_on_target: -10
+  radius_on_target: 0.1
+  knife_bullet: {fileID: 2802491756539585672, guid: 7aba757263d12414c97bd87ceb0a306d, type: 3}
 --- !u!1 &4432705065776395989
 GameObject:
   m_ObjectHideFlags: 0

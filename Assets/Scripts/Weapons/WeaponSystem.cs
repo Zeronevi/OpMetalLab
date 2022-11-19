@@ -180,9 +180,18 @@ public class WeaponSystem : MonoBehaviour
 
         if (weapon.CanShoot())
         {
-            Vector2 positionToFire = playerTarget.GetPositionTarget();
-            weapon.Shoot(this.bullet, gunBarrel.transform.position, bullet.transform.rotation, positionToFire);
-            AudioSystem.GetInstance().Shoot(false, gunBarrel.transform.position);
+            if(weapon.isWhiteWeapon())
+            {
+                Vector2 positionToFire = playerTarget.GetPositionTarget();
+                weapon.Shoot(null, player.transform.position, player.transform.rotation, positionToFire);
+                //AudioSystem.GetInstance().Shoot(false, gunBarrel.transform.position);
+            } else
+            {
+                Vector2 positionToFire = playerTarget.GetPositionTarget();
+                weapon.Shoot(this.bullet, gunBarrel.transform.position, bullet.transform.rotation, positionToFire);
+                AudioSystem.GetInstance().Shoot(false, gunBarrel.transform.position);
+            }
+            
 
         } else if(Input.GetKeyDown(KeyCode.Mouse0) && !weapon.isWaiting())
         {
