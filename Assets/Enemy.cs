@@ -5,16 +5,21 @@ using UnityEngine.AI;
 using Unity.Mathematics;
 public class Enemy : MonoBehaviour
 {
+    public float MAX_HEALTH = 100;
+    [SerializeField] LifeBar life_bar = null;
+    [SerializeField] GameObject MASTER_OBJ = null;
+
     // Start is called before the first frame update
     public Vector2 moveTarget;
     public static List<GameObject> enemyList;
     public GameObject bloodEffect2;
 
-    public int health = 50;
+    public float health = 100;
     public NavMeshAgent _agent;
     
     void Start()
     {
+        health = MAX_HEALTH;
         _agent = GetComponent<NavMeshAgent>();
         _agent.updateRotation = false;
         _agent.updateUpAxis = false;
@@ -43,12 +48,13 @@ public class Enemy : MonoBehaviour
     {
         gameObject.SetActive(false);
         Enemy.enemyList.Remove(this.gameObject);
-        Destroy(this.gameObject);
+        Destroy(MASTER_OBJ.gameObject);
     }
     public void takeDamage(int damage)
     {
         Debug.Log(damage);
         health = health - damage;
+        if (life_bar != null) life_bar.SetLife(health / MAX_HEALTH);
 
         //this.transform.position = new Vector3(this.transform.position.x, this.transform.position.y, this.transform.position.z);
 

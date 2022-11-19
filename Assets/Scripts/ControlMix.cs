@@ -15,6 +15,14 @@ public class ControlMix : MonoBehaviour
     [SerializeField] Slider musicSlider = null;
     [SerializeField] Slider effectsSlider = null;
 
+    bool updated = false;
+
+    private void Awake()
+    {
+        updateSliders();
+        updated = true;
+    }
+
     public void updateSliders()
     {
         float aux = 0;
@@ -29,23 +37,31 @@ public class ControlMix : MonoBehaviour
     }
 
     public void SetMasterVolume()
-    { 
-        mixer.SetFloat(masterName, Mathf.Log10(masterSlider.value) * 20);
+    {
+        if(updated)
+            mixer.SetFloat(masterName, Mathf.Log10(masterSlider.value) * 20);
     }
 
     public void SetMusicVolume()
     {
-        mixer.SetFloat(musicName, Mathf.Log10(musicSlider.value) * 20);
+        if (updated)
+          mixer.SetFloat(musicName, Mathf.Log10(musicSlider.value) * 20);
     }
 
     public void SetEffectsVolume()
     {
-        mixer.SetFloat(effectsName, Mathf.Log10(effectsSlider.value) * 20);
+        if (updated)
+            mixer.SetFloat(effectsName, Mathf.Log10(effectsSlider.value) * 20);
     }
 
     private void OnEnable()
     {
         updateSliders();
+        updated = true;
     }
 
+    private void OnDisable()
+    {
+        updated = false;
+    }
 }

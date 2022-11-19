@@ -186,7 +186,7 @@ public class WeaponSystem : MonoBehaviour
 
         } else if(Input.GetKeyDown(KeyCode.Mouse0) && !weapon.isWaiting())
         {
-            AudioSystem.GetInstance().Shoot(true, gunBarrel.transform.position);
+            if(!weapon.isWhiteWeapon()) AudioSystem.GetInstance().Shoot(true, gunBarrel.transform.position);
         }
     }
 

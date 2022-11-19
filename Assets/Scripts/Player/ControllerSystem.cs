@@ -7,9 +7,10 @@ public class ControllerSystem : MonoBehaviour
     [SerializeField] WeaponSystem weaponSystem;
     [SerializeField] PlayerStatus playerStatus;
 
+    PauseScript pauseSystem = null;
     void Start()
     {
-        
+        if (pauseSystem == null) pauseSystem = FindObjectOfType<PauseScript>();
     }
 
     private bool shooting = false;
@@ -17,6 +18,8 @@ public class ControllerSystem : MonoBehaviour
     private bool running = false;
     void Update()
     {
+        if (pauseSystem != null && pauseSystem.IsPaused()) return;
+
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             shooting = true;
