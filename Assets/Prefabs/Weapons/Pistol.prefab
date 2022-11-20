@@ -207,6 +207,7 @@ MonoBehaviour:
   fov_on_target: -10
   viewDistance_on_target: -10
   radius_on_target: 0.1
+  type: 1
 --- !u!82 &5033877224349879939
 AudioSource:
   m_ObjectHideFlags: 0

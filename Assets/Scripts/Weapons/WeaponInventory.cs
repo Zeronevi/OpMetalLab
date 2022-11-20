@@ -123,4 +123,18 @@ public class WeaponInventory : MonoBehaviour
             weapon.Drop();
         }
     }
+
+    public bool AddAmmo(int amount, int type)
+    {
+        foreach(Weapon weapon in weapons)
+        {
+            if(weapon.GetTypeWeapon() == type)
+            {
+                weapon.addAmmo(amount);
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

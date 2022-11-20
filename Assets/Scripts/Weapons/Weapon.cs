@@ -37,7 +37,12 @@ public class Weapon : MonoBehaviour
     protected BoxCollider2D weaponCollider;
 
     protected AudioSource jukebox = null;
+    [SerializeField]protected int type = 0;
 
+    public int GetTypeWeapon()
+    {
+        return type;
+    }
     private void Awake()
     {
         this.lateral = transform.GetChild(0).gameObject;
@@ -72,6 +77,11 @@ public class Weapon : MonoBehaviour
         return total_ammo + ammo_in_weapon;
     }
 
+    public int GetTotalAmmoInBag()
+    {
+        return total_ammo;
+    }
+
     public bool isAvaliable()
     {
         return  !(time > 0 || (ammo_in_weapon == 0 && !isWhiteWeapon()));
@@ -79,7 +89,7 @@ public class Weapon : MonoBehaviour
 
     public void Reload()
     {
-        if (total_ammo > 0 && AMMO_PER_PACKAGE != IFINITE_AMMO)
+        if (total_ammo > 0 && AMMO_PER_PACKAGE != IFINITE_AMMO && ammo_in_weapon < AMMO_PER_PACKAGE)
         {
             reloading = true;
             time = TIME_RELOAD;
@@ -158,7 +168,6 @@ public class Weapon : MonoBehaviour
             else ammo_in_weapon = total_ammo;
 
             total_ammo -= ammo_in_weapon;
-
             reloading = false;
         }
 
