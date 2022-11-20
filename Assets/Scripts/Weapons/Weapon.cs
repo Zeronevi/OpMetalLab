@@ -36,11 +36,14 @@ public class Weapon : MonoBehaviour
 
     protected BoxCollider2D weaponCollider;
 
+    protected AudioSource jukebox = null;
+
     private void Awake()
     {
         this.lateral = transform.GetChild(0).gameObject;
         this.superior = transform.GetChild(1).gameObject;
         weaponCollider = GetComponent<BoxCollider2D>();
+        jukebox = GetComponentInChildren<AudioSource>();
     }
     protected virtual void Start()
     { 
@@ -94,9 +97,16 @@ public class Weapon : MonoBehaviour
             bulletSpeed * dir.normalized;
 
         NoiseSystem.MakeNoise(transform.position, bulletNoise);
+        PlayAudio();
 
         ammo_in_weapon -= 1;
         time = TIME_SHOOTS;
+
+    }
+
+    protected void PlayAudio()
+    {
+        if(jukebox != null) jukebox.Play();
     }
 
     public void Equip()
@@ -156,8 +166,11 @@ public class Weapon : MonoBehaviour
 
     public void ResetTime()
     {
-        reloading = false;
-        time = 0;
+        if(reloading)
+        {
+            reloading = false;
+            time = 0;
+        }
     }
 
     public float GetSpeed_on_target()

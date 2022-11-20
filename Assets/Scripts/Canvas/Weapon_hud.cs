@@ -59,7 +59,8 @@ public class Weapon_hud : MonoBehaviour
             text.SetText("-- // --");
         } else
         {
-            text.SetText("Ammo: " + weapon.GetAmmoInWeapon() + " // " + weapon.GetPackagesAmount());
+            if(weapon.GetAmmoInWeapon() <= 0 && weapon.GetPackagesAmount() > 0) text.SetText("R to reload");
+            else text.SetText("Ammo: " + weapon.GetAmmoInWeapon() + " // " + weapon.GetPackagesAmount());
         }
     }
 }

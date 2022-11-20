@@ -52,11 +52,6 @@ public class WeaponInventory : MonoBehaviour
             weapons[index].Equip();
             weapons[index].ResetTime();
             indexSelectedWeapon = index;
-
-            if (isPlayer)
-            {
-                
-            }
         }
 
         return true;

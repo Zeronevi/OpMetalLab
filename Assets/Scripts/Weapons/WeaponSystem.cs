@@ -183,13 +183,11 @@ public class WeaponSystem : MonoBehaviour
             if(weapon.isWhiteWeapon())
             {
                 Vector2 positionToFire = playerTarget.GetPositionTarget();
-                weapon.Shoot(null, player.transform.position, player.transform.rotation, positionToFire);
-                //AudioSystem.GetInstance().Shoot(false, gunBarrel.transform.position);
+                weapon.Shoot(this.bullet, player.transform.position, player.transform.rotation, positionToFire);
             } else
             {
                 Vector2 positionToFire = playerTarget.GetPositionTarget();
                 weapon.Shoot(this.bullet, gunBarrel.transform.position, bullet.transform.rotation, positionToFire);
-                AudioSystem.GetInstance().Shoot(false, gunBarrel.transform.position);
             }
             
 

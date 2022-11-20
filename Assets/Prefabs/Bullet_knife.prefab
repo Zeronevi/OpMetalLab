@@ -68,8 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 0
-  bloodEffect: {fileID: 7605376015754563760, guid: 1d28a010bcc0e52449025edb86b5c79b, type: 3}
-  angleSpeed: 100
+  angleSpeed: 130
   radius: 0.1
   initial_angle: 0
   angle: 0
