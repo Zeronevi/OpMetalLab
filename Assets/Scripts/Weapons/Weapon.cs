@@ -106,7 +106,7 @@ public class Weapon : MonoBehaviour
         objBullet.GetComponent<Rigidbody2D>().velocity =
             bulletSpeed * dir.normalized;
 
-        NoiseSystem.MakeNoise(transform.position, bulletNoise);
+        NoiseSystem.MakeNoise(transform.position, bulletNoise,Noise.SoundType.Gunshot);
         PlayAudio();
 
         ammo_in_weapon -= 1;

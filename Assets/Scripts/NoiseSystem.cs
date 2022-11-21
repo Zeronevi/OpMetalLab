@@ -16,54 +16,33 @@ public class NoiseSystem : MonoBehaviour
         Noises = new List<Noise>();
     }
 
-    public void Update()
+    public static void MakeNoise(Vector2 position, float strength, Noise.SoundType soundType)
     {
-        DebugInfo();
-    }
-
-    public static void MakeNoise(Vector2 position, float strenght)
-    {
-        foreach (GameObject enemy in Enemy.enemyList)
+        Noise noise = new Noise(position, strength, soundType);
+        foreach (Enemy enemy in Enemy.enemyList)
         {
-            if (Vector2.Distance(position, enemy.transform.position) < strenght)
-            {
-                enemy.GetComponent<Enemy>().SetDestiny(position);
-                print("Sampla");
-            }
+            enemy.Listen(noise);
         }
-        Noises.Add(new Noise(position,strenght));
-    }
-
-    void DebugInfo()
-    {
-        if (Input.GetKeyDown(KeyCode.Mouse1)){
-            NoiseSystem.MakeNoise(SharedContent.MousePosition, 2f);
-        }
-    }
-    
-    
-    public void OnDrawGizmos()
-    {
-        //TODO: Desenhar os Gizmos
-        if (Noises != null && Noises.Count != 0)
-        {
-            foreach (var noise in Noises)
-            {
-                Gizmos.DrawWireSphere(noise.Position, noise.Strength);
-            }
-        }
+        Noises.Add(noise);
     }
 }
-
 
 public class Noise
 {
     public Vector2 Position;
     public float Strength;
 
-    public Noise(Vector2 pos, float strength)
+    public enum SoundType
+    {
+        //TODO tweak
+        AmbientNoise = 1,Steps = 3,BulletHit = 5,SilencedGunshot = 8,Gunshot = 15
+    }
+    public SoundType soundType;
+    
+    public Noise(Vector2 pos, float strength, SoundType soundType)
     {
         Position = pos;
         Strength = strength;
+        this.soundType = soundType;
     }
 }

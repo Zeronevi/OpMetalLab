@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7593484080214579204}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Enemy_real
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -395,6 +395,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 2041912733884068358, guid: e8f5dd89738a0914d8e64e3fcf5865f4, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 8933738064693551934, guid: e8f5dd89738a0914d8e64e3fcf5865f4, type: 3}
       propertyPath: m_Enabled
       value: 1
@@ -406,6 +410,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: e8f5dd89738a0914d8e64e3fcf5865f4, type: 3}
+--- !u!1 &5872093350441332115 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4320891164331213403, guid: e8f5dd89738a0914d8e64e3fcf5865f4, type: 3}
+  m_PrefabInstance: {fileID: 7677298522762981320}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8565119183886130635 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2041912733884068355, guid: e8f5dd89738a0914d8e64e3fcf5865f4, type: 3}
@@ -416,7 +425,7 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2041912733884068358, guid: e8f5dd89738a0914d8e64e3fcf5865f4, type: 3}
   m_PrefabInstance: {fileID: 7677298522762981320}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &5133361610541913767
+--- !u!114 &4617902746065325741
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -425,17 +434,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 8565119183886130638}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15e79ef020236ac46aa26b4c68640ebc, type: 3}
+  m_Script: {fileID: 11500000, guid: b0d321bbdb3fed34cb6ceaee7467f576, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MAX_HEALTH: 100
   life_bar: {fileID: 2276738150163950640}
   MASTER_OBJ: {fileID: 4477241143539262497}
-  moveTarget: {x: 0, y: 0}
   bloodEffect2: {fileID: 4227424330636120077, guid: 8993e5c6368f78148a5c94a8106a5477, type: 3}
   bloodEffect1: {fileID: 7605376015754563760, guid: 1d28a010bcc0e52449025edb86b5c79b, type: 3}
-  health: 50
-  _agent: {fileID: 0}
+  startingState: 0
+  patrolPoints: []
+  mask:
+    serializedVersion: 2
+    m_Bits: 1033
+  player: {fileID: 0}
+  fov: 40
+  moveTarget: {x: 0, y: 0}
+  agent: {fileID: 0}
+  MAX_HEALTH: 100
+  health: 100
+  delay: 2
+  gunBarrel: {fileID: 5872093350441332115}
+  bulletPrefab: {fileID: 9091873785384823381, guid: 523c7c2018eaed24fb76c8bda53c28ed, type: 3}
+  bulletSpeed: 20
+  bulletSpreadAngle: 5
 --- !u!195 &8189740149404508693
 NavMeshAgent:
   m_ObjectHideFlags: 0

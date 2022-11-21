@@ -95,7 +95,7 @@ GameObject:
   - component: {fileID: 8219983038340860326}
   - component: {fileID: 4532593195088784613}
   - component: {fileID: -2186092243643566017}
-  - component: {fileID: 675028283479940121}
+  - component: {fileID: 8247062460549508471}
   m_Layer: 3
   m_Name: Bullet
   m_TagString: Untagged
@@ -156,7 +156,7 @@ CircleCollider2D:
   m_Offset: {x: 0.000000014901161, y: 0}
   serializedVersion: 2
   m_Radius: 0.12613378
---- !u!114 &675028283479940121
+--- !u!114 &8247062460549508471
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -168,5 +168,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d85feff31b387d74880fac1b40d12171, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 10
-  bloodEffect: {fileID: 7605376015754563760, guid: 1d28a010bcc0e52449025edb86b5c79b, type: 3}
+  damage: 0
+  damage: 0
