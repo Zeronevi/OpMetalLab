@@ -4,10 +4,21 @@ using UnityEngine;
 
 public class PlayerStatus : MonoBehaviour
 {
+    private int keys = 0;
+
+    public void addKey()
+    {
+        keys++;
+    } 
+
+    public int getKeys()
+    {
+        return keys;
+    }
 
     public static float MAX_LIFE = 1200.0f;
-    //[SerializeField] private float current_life = MAX_LIFE;
-    public float current_life = MAX_LIFE;
+
+    private float current_life = MAX_LIFE;
 
     public static float MAX_ENERGY = 20.0f;
     [SerializeField] private float current_energy = MAX_LIFE;
@@ -52,8 +63,8 @@ public class PlayerStatus : MonoBehaviour
     }
     void Start()
     {
-        current_life = MAX_LIFE;
         PlayerStatus.playerStatus = this;
+        ResetStatus();
     }
 
     private void FixedUpdate()
@@ -107,4 +118,10 @@ public class PlayerStatus : MonoBehaviour
         return null;
     }
 
+    public void ResetStatus()
+    {
+        current_life = MAX_LIFE;
+        current_energy = MAX_ENERGY;
+        keys = 0;
+    }
 }

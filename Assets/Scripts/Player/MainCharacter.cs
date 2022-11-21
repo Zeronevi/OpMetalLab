@@ -23,6 +23,7 @@ public class MainCharacter : MonoBehaviour
         _velocity = new Vector2();
         _rb = GetComponent<Rigidbody2D>();
         speed = NORMAL_SPEED;
+        PlayerStatus.GetInstance().ResetStatus();
     }
 
     void Update()
