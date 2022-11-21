@@ -12,8 +12,10 @@ public class PauseScript : MonoBehaviour
 
     void Update()
     {
+        if (!isPaused && Time.timeScale == 0) return;
+
         if (Input.GetKeyDown(KeyCode.Escape))
-        {      
+        {
             isPaused = !isPaused;
             Time.timeScale = isPaused ? 0 : 1;
             pauseMenu.SetActive(isPaused);

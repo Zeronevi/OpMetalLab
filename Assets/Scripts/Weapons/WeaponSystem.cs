@@ -14,15 +14,16 @@ public class WeaponSystem : MonoBehaviour
     private GameObject player;
     private BoxCollider2D playerCollider;
 
-    [SerializeField] public GameObject bullet, gunBarrel;
-    [SerializeField] public float bulletSpeed;
-
+    [SerializeField] private GameObject bullet, gunBarrel;
+    [SerializeField] private float bulletSpeed;
+    [SerializeField] private AudioSource jukebox;
     void Start()
     {
         this.player = GameObject.Find("Player");
         this.playerCollider = player.GetComponent<BoxCollider2D>();
         this.playerInventory.HideAll();
         this.inventoryScene.ShowAllDropped();
+        jukebox = GetComponent<AudioSource>();
     }
 
     public void AdjustParameters(bool target, bool running)
@@ -193,7 +194,7 @@ public class WeaponSystem : MonoBehaviour
 
         } else if(Input.GetKeyDown(KeyCode.Mouse0) && !weapon.isWaiting())
         {
-            if(!weapon.isWhiteWeapon()) AudioSystem.GetInstance().Shoot(true, gunBarrel.transform.position);
+            if (!weapon.isWhiteWeapon()) jukebox.Play();
         }
     }
 

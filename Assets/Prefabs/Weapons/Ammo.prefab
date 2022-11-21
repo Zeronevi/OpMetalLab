@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4892656261495176521}
   - component: {fileID: 1056921983221312365}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3451911368580139376}
   - component: {fileID: 7530890917088646461}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: weapon_color
   m_TagString: Untagged
   m_Icon: {fileID: 0}

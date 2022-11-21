@@ -7,6 +7,7 @@ public class TextSpeakSystem : MonoBehaviour
 
     [SerializeField] private MainCharacter player = null;
     [SerializeField] private TextBox textBox = null;
+    [SerializeField] private MsgBox msgBox = null;
     private TextBox current_textBox = null;
     
     [SerializeField] private GameObject actionBox;
@@ -26,6 +27,12 @@ public class TextSpeakSystem : MonoBehaviour
 
         timeToWait = TextBox.TIME_TO_DESTROY;
 
+    }
+
+    public void ShowMsgBox(string text)
+    {
+        MsgBox copy = Instantiate(msgBox, Vector3.zero, Quaternion.identity);
+        copy.SetText(text);
     }
 
     public void ShowActionBox()
