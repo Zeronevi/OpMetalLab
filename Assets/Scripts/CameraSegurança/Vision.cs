@@ -31,6 +31,8 @@ public class Vision : MonoBehaviour
     {
         UpdateMesh();
         UpdateLine();
+
+
     }
 
     private void UpdateMesh()
@@ -146,8 +148,32 @@ public class Vision : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("HUD");
     }
 
+    [SerializeField] private float MINIMUNS_RADIUS_FOR_WARNING = 10;
     private void Detected()
     {
-        print("Detectado");
+        if (!isAlert) StartCoroutine(AlertEnemys());
+    }
+
+    private bool isAlert = false;
+    [SerializeField] TextBox textBox = null;
+    private IEnumerator AlertEnemys()
+    {
+        isAlert = true;
+        yield return new WaitForSeconds(5f);
+        
+        Vector2 current_position = this.gameObject.transform.position;
+        foreach (Enemy enemy in Enemy.enemyList)
+        {
+            Vector2 deltaDist = current_position - (Vector2)enemy.transform.position;
+            if ((deltaDist.magnitude) <= MINIMUNS_RADIUS_FOR_WARNING)
+            {
+                TextBox text = Instantiate(textBox, Vector2.zero, Quaternion.identity);
+                text.SetMessage("Enemy detected!! KILL HIM!");
+                text.SetReferenceObj(enemy.gameObject);
+                text.Enable();
+                enemy.EnterChase();
+            }
+        }
+        isAlert = false;
     }
 }

@@ -16,7 +16,7 @@ public class PlayerStatus : MonoBehaviour
         return keys;
     }
 
-    public static float MAX_LIFE = 100f;
+    public static float MAX_LIFE = 200f;
 
     private float current_life = MAX_LIFE;
 
@@ -36,7 +36,6 @@ public class PlayerStatus : MonoBehaviour
         if (playerStatus != null)
         {
             playerStatus.current_life -= damage;
-            print("OIII");
             if (playerStatus.current_life <= 0 && playerStatus.gameFinish != null)
             {
                 

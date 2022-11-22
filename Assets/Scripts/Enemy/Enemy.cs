@@ -50,6 +50,7 @@ public class Enemy : MonoBehaviour
     //--Audicao--
     private Noise _investigationTarget = null;
     private const float SoundThreshold = 1;
+    [SerializeField] public NoiseSystem noiseSystem;
 
     //--PathFinding-- 
     public Vector2 moveTarget;
@@ -98,6 +99,8 @@ public class Enemy : MonoBehaviour
                 EnterIdle();
                 break;
         }
+
+        StartCoroutine(StepNoiseMaker());
     }
 
     // Update is called once per frame
@@ -186,7 +189,7 @@ public class Enemy : MonoBehaviour
             Shoot();
         }
 
-        agent.isStopped = Vector2.Distance(transform.position, player.transform.position) < 7 ;
+        agent.isStopped = seesPlayer && Vector2.Distance(transform.position, player.transform.position) < 4;
     }
 
     private void EnterIdle()
@@ -211,7 +214,7 @@ public class Enemy : MonoBehaviour
         SetDestination(position);
     }
 
-    private void EnterChase()
+    public void EnterChase()
     {
         _state = EnemyState.Chase;
         Debug.Log(this.name + " entrou estado de perseguição, cuidado!!!");
@@ -314,6 +317,16 @@ public class Enemy : MonoBehaviour
         }
 
         _spinCondition = SpinCondition.Spun;
+    }
+
+    private IEnumerator StepNoiseMaker()
+    {
+        while (isActiveAndEnabled)
+        {
+            if (agent.velocity.magnitude > 0.05f)
+                noiseSystem.AddEnemyStep(transform.position, 0.15f);
+            yield return new WaitForSeconds(.30f);
+        }
     }
 
     public void takeDamage(float damage)

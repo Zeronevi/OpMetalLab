@@ -12,18 +12,7 @@ public class SecuritySystem : MonoBehaviour
 
     public void Update()
     {
-        if (controlled && Input.GetKeyDown(KeyCode.C))
-        {
-            if(showing)
-            {
-                HideAll();
-                showing = false;
-            } else
-            {
-                ShowAll();
-                showing = true;
-            }
-        }
+
     }
 
     public void ShowAll()

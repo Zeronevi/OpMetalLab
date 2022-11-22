@@ -67,7 +67,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0a26501d58260f6418c38890f8875211, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damage: 0
+  damage: 100
   angleSpeed: 130
   radius: 0.1
   initial_angle: 0
