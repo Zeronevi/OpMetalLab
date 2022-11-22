@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Unity.Mathematics;
+using Random = System.Random;
+
 public class Enemy : MonoBehaviour
 {
     public static List<Enemy> enemyList;
@@ -81,7 +83,9 @@ public class Enemy : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
-        
+
+        jukebox = GetComponent<AudioSource>();
+
         if (enemyList == null) enemyList = new List<Enemy>();
         enemyList.Add(this.gameObject.GetComponent<Enemy>());
 
@@ -216,6 +220,8 @@ public class Enemy : MonoBehaviour
 
     public void EnterChase()
     {
+        if (_state == EnemyState.Chase) return;
+        
         _state = EnemyState.Chase;
         Debug.Log(this.name + " entrou estado de perseguição, cuidado!!!");
         //TODO colocar indicador de status
@@ -224,12 +230,23 @@ public class Enemy : MonoBehaviour
         if(_spinning != null)
             StopCoroutine(_spinning);
         StartCoroutine(ChaseRoutine());
+
+        List<string> sentences = new List<string>();
+        sentences.Add("Hey, bro, come here NOW!");
+        sentences.Add("I'll kill you!");
+        sentences.Add("WHAT? How do you enter here?");
+        sentences.Add("Oh! Why are you runnning?");
+        
+        Speak(sentences[random.Next(0, sentences.Count)]);
     }
-    
+
+
+
+    private Random random = new Random();
     //
     // --  Sentidos e Acoes
     //
-    
+
     private void SetDestination(Vector2 position)
     {
         moveTarget = position;
@@ -274,10 +291,11 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private AudioSource jukebox = null;
     private void Shoot()
     {
         if (_canShoot)
-        { 
+        {
             //TODO ADICIONAR SFX E VISUALIZAÇÃO DO SOM
             var _bullet = Instantiate(bulletPrefab);
             _bullet.transform.position = gunBarrel.transform.position;
@@ -286,6 +304,9 @@ public class Enemy : MonoBehaviour
             Vector2 bulletDirection = new Vector2(math.cos(bulletAngle), math.sin(bulletAngle));
             _bullet.GetComponent<Rigidbody2D>().velocity = bulletDirection*bulletSpeed;
             StartCoroutine(RateOfFireDelay());
+
+            //noiseSystem.AddEnemyStep(this.transform.position, 15f);
+            jukebox.Play();
         }
     }
 
@@ -350,6 +371,15 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(false);
         Enemy.enemyList.Remove(this.gameObject.GetComponent<Enemy>());
         Destroy(MASTER_OBJ);
+    }
+
+    [SerializeField] TextBox textBox = null;
+    private void Speak(string text)
+    {
+        TextBox textbox = Instantiate(this.textBox, Vector2.zero, Quaternion.identity);
+        textbox.SetMessage(text);
+        textbox.SetReferenceObj(gameObject);
+        textbox.Enable();
     }
 
 }

@@ -155,7 +155,6 @@ public class Vision : MonoBehaviour
     }
 
     private bool isAlert = false;
-    [SerializeField] TextBox textBox = null;
     private IEnumerator AlertEnemys()
     {
         isAlert = true;
@@ -167,10 +166,6 @@ public class Vision : MonoBehaviour
             Vector2 deltaDist = current_position - (Vector2)enemy.transform.position;
             if ((deltaDist.magnitude) <= MINIMUNS_RADIUS_FOR_WARNING)
             {
-                TextBox text = Instantiate(textBox, Vector2.zero, Quaternion.identity);
-                text.SetMessage("Enemy detected!! KILL HIM!");
-                text.SetReferenceObj(enemy.gameObject);
-                text.Enable();
                 enemy.EnterChase();
             }
         }
