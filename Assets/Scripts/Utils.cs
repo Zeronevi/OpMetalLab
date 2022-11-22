@@ -27,19 +27,45 @@ public class Utils :MonoBehaviour
 
         return MousePosition;
     }
-
-    public static float euler(float deltaT, float x, float force, float k, float b)
+    
+    public static float euler(float deltaT, float x0, float dxdt)
     {
-        float dydt = (force - k * x) / b;
-        float newX = x + deltaT * dydt;
+        float x = x0 + dxdt * deltaT;
+        return x;
+    }
+
+    public static float eulerOrdem1(float deltaT, float x, float force, float k, float b)
+    {
+        float dxdt = (force - k * x) / b;
+        float newX = euler(deltaT, x, dxdt);
         return newX;
     }
 
-    public static Vector2 euler(float deltaT, Vector2 x, Vector2 force, float k, float b)
+    public static Vector2 eulerOrdem2(float deltaT, float position,float speed, float force,float m, float k, float b)
     {
-        Vector2 dydt= (force - k * x)* (1f/b);
-        Vector2 newX = x + deltaT * dydt;
-        return newX;
+        float aceleration = -(b/m)*speed - (k/m) * position + force/m;
+
+        float newPosition = position + speed * deltaT + (aceleration / 2) * (deltaT*deltaT);
+        float newSpeed = speed + aceleration * deltaT;
+
+        Vector2 result = Vector2.zero;
+        result.x = newPosition;
+        result.y = newSpeed;
+        return result;
+    }
+
+    public static Vector2 eulerOrdem2(float deltaT, float position, float speed, float force, float wn, float zeta)
+    {
+
+        float aceleration = -((2 * zeta) / (wn)) * speed - (1/(wn*wn)) * position + 1 * force / (wn*wn);
+
+        float newPosition = position + speed * deltaT + (aceleration / 2) * (deltaT * deltaT);
+        float newSpeed = speed + aceleration * deltaT;
+
+        Vector2 result = Vector2.zero;
+        result.x = newPosition;
+        result.y = newSpeed;
+        return result;
     }
 
 }
