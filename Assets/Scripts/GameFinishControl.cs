@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameFinishControl : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class GameFinishControl : MonoBehaviour
 
     [SerializeField] private GameObject button_victory = null;
     [SerializeField] private GameObject button_loser = null;
+
+    [SerializeField] private string next_scene_name = "";
 
     private void Start()
     {
@@ -37,5 +40,33 @@ public class GameFinishControl : MonoBehaviour
     public void desPause()
     {
         Time.timeScale = 1;
+    }
+
+    public void Retry()
+    {
+        Replay();
+    }
+
+    public void Next()
+    {
+        if (next_scene_name.Equals("")) MainMenu();
+        else
+        {
+            SceneManager.LoadScene(next_scene_name);
+            desPause();
+        }
+    }
+
+    public void Replay()
+    {
+        string name = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(name);
+        desPause();
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+        desPause();
     }
 }

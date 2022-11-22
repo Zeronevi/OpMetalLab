@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    [SerializeField] Sprite lateralSprite = null;
+
     private GameObject superior;
     private GameObject lateral;
 
@@ -39,6 +41,20 @@ public class Weapon : MonoBehaviour
     protected AudioSource jukebox = null;
     [SerializeField]protected int type = 0;
 
+
+    [SerializeField] string nameWeapon = "";
+
+    public Sprite GetLateralSprite()
+    {
+        return lateralSprite;
+    }
+
+    public string GetName()
+    {
+        
+        return nameWeapon;
+    }
+
     public int GetTypeWeapon()
     {
         return type;
@@ -46,6 +62,8 @@ public class Weapon : MonoBehaviour
     private void Awake()
     {
         this.lateral = transform.GetChild(0).gameObject;
+        this.lateral.GetComponent<SpriteRenderer>().sprite = lateralSprite;
+
         this.superior = transform.GetChild(1).gameObject;
         weaponCollider = GetComponent<BoxCollider2D>();
         jukebox = GetComponentInChildren<AudioSource>();

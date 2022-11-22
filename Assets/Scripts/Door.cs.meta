@@ -3,7 +3,9 @@ guid: 8c424f92480683d49aa3c32c5cb17a59
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - speakSystem: {instanceID: 0}
+  - gameFinish: {fileID: 2944054706264813152, guid: 11d5990bad7bc7e48b13e013c9b8a076, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

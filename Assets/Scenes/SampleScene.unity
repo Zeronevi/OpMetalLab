@@ -1026,6 +1026,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 773100156}
     m_Modifications:
+    - target: {fileID: 3299055587403976205, guid: d5aa4fccde814b447b5be7e1b6ed4b02, type: 3}
+      propertyPath: m_Layer
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 3990759492260830508, guid: d5aa4fccde814b447b5be7e1b6ed4b02, type: 3}
       propertyPath: m_Name
       value: Knife
@@ -4253,7 +4257,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1555936517715557894, guid: 4d2512b0555ab9f4b91728ff63d65fbb, type: 3}
       propertyPath: m_Layer
-      value: 8
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 1698480504931249625, guid: 4d2512b0555ab9f4b91728ff63d65fbb, type: 3}
       propertyPath: m_Layer
@@ -4391,7 +4395,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponSystem: {fileID: 773100155}
-  playerStatus: {fileID: 2052451554}
+  playerStatus: {fileID: 0}
 --- !u!1001 &2087095807
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -16,18 +16,33 @@ public class PlayerStatus : MonoBehaviour
         return keys;
     }
 
-    public static float MAX_LIFE = 1200.0f;
+    public static float MAX_LIFE = 100f;
 
     private float current_life = MAX_LIFE;
 
     public static float MAX_ENERGY = 20.0f;
     [SerializeField] private float current_energy = MAX_LIFE;
     [SerializeField] private float speed_energy = 1f;
-
+    [SerializeField] private GameFinishControl gameFinish = null;
     public static void SetCurrentLife(float life)
     {
         PlayerStatus playerStatus = GetInstance();
         if (playerStatus != null) playerStatus.current_life = life;
+    }
+
+    public static void TakeDamage(float damage)
+    {
+        PlayerStatus playerStatus = GetInstance();
+        if (playerStatus != null)
+        {
+            playerStatus.current_life -= damage;
+            print("OIII");
+            if (playerStatus.current_life <= 0 && playerStatus.gameFinish != null)
+            {
+                
+                Instantiate(playerStatus.gameFinish, Vector2.zero, Quaternion.identity).Loser();
+            }
+        }
     }
 
     public static float getCurrentLife()

@@ -5,6 +5,10 @@ using UnityEngine;
 public class DefaultAmmo : MonoBehaviour
 {
 
+    [SerializeField] private Sprite PISTOL_SPRITE = null;
+    [SerializeField] private Sprite SUB_SPRITE = null;
+    [SerializeField] private Sprite SNIPER_SPRITE = null;
+
     public static int PISTOL_AMMO = 1;
     public static int SUB_AMMO = 2;
     public static int SNIPPER_AMMO = 3;
@@ -13,11 +17,11 @@ public class DefaultAmmo : MonoBehaviour
     public int type = 1;
     // Start is called before the first frame update
 
-    [SerializeField] SpriteRenderer render = null;
+    private SpriteRenderer render = null;
 
     private void Start()
     {
-        render = transform.GetChild(1).GetComponent<SpriteRenderer>();
+        render = GetComponent<SpriteRenderer>();
         updateColor();
     }
     public void SetType(int type)
@@ -28,9 +32,10 @@ public class DefaultAmmo : MonoBehaviour
 
     private void updateColor()
     {
-        if (type == PISTOL_AMMO) render.color = Color.green;
-        else if (type == SUB_AMMO) render.color = Color.red;
-        else if (type == SNIPPER_AMMO) render.color = Color.blue;
+
+        if (type == PISTOL_AMMO) render.sprite = PISTOL_SPRITE;
+        else if (type == SUB_AMMO) render.sprite = SUB_SPRITE;
+        else if (type == SNIPPER_AMMO) render.sprite = SNIPER_SPRITE;
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

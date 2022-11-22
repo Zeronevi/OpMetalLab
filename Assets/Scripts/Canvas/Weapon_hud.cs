@@ -8,15 +8,17 @@ public class Weapon_hud : MonoBehaviour
 {
     [SerializeField] private WeaponInventory playerInventory = null;
 
-    private TextMeshProUGUI text = null;
-    private Image reference_reload_bar = null;
-    private Image reload_bar = null;
+    [SerializeField] private TextMeshProUGUI text = null;
+    [SerializeField] private TextMeshProUGUI weaponName = null;
+    [SerializeField] private Image reference_reload_bar = null;
+    [SerializeField] private Image reload_bar = null;
+    [SerializeField] private Image weapon_image = null;
 
     void Start()
     {
-        reference_reload_bar = transform.GetChild(2).gameObject.GetComponent<Image>();
+        /*reference_reload_bar = transform.GetChild(2).gameObject.GetComponent<Image>();
         reload_bar = transform.GetChild(3).gameObject.GetComponent<Image>();
-        text = transform.GetChild(4).gameObject.GetComponent<TextMeshProUGUI>();
+        text = transform.GetChild(4).gameObject.GetComponent<TextMeshProUGUI>();*/
     }
 
 
@@ -54,6 +56,22 @@ public class Weapon_hud : MonoBehaviour
     private void UpdateWeapon()
     {
         Weapon weapon = playerInventory.getSelectedWeapon();
+        if(weapon != null)
+        {
+            weapon_image.sprite = weapon.GetLateralSprite();
+            Color color = Color.white;
+            color.a = 0.72f;
+            weapon_image.color = color;
+            weaponName.text = weapon.GetName();
+        } else
+        {
+            weapon_image.sprite = null;
+            Color color = Color.white;
+            color.a = 0;
+            weapon_image.color = color;
+            weaponName.text = "No weapon selected!";
+        }
+
         if(weapon == null || weapon.isWhiteWeapon())
         {
             text.SetText("-- // --");

@@ -8,16 +8,16 @@ public class Life : MonoBehaviour
     [SerializeField] private float YELLOW_LIFE = 0.30f;
     [SerializeField] private float RED_LIFE = 0.15f;
 
-    private Image life_bar;
-    private Image referemce_life_bar;
-    private Image energy_bar;
+    [SerializeField] private Image life_bar;
+    [SerializeField] private Image referemce_life_bar;
+    [SerializeField] private Image energy_bar;
 
     // Start is called before the first frame update
     void Start()
     {
-        referemce_life_bar = transform.GetChild(1).gameObject.GetComponent<Image>();
+        /*referemce_life_bar = transform.GetChild(1).gameObject.GetComponent<Image>();
         life_bar = transform.GetChild(2).gameObject.GetComponent<Image>();
-        energy_bar = transform.GetChild(3).gameObject.GetComponent<Image>();
+        energy_bar = transform.GetChild(3).gameObject.GetComponent<Image>();*/
     }
 
     // Update is called once per frame

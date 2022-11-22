@@ -7,6 +7,15 @@ using Unity.Mathematics;
 public class Enemy : MonoBehaviour
 {
     public static List<Enemy> enemyList;
+    public static void ResetListEnemy()
+    {
+        if(enemyList == null)
+            enemyList = new List<Enemy>();
+
+        enemyList.Clear();
+    }
+
+
     [SerializeField] LifeBar life_bar = null;
     [SerializeField] GameObject MASTER_OBJ = null;
 
@@ -307,7 +316,7 @@ public class Enemy : MonoBehaviour
         _spinCondition = SpinCondition.Spun;
     }
 
-    public void takeDamage(int damage)
+    public void takeDamage(float damage)
     {
         Debug.Log(damage);
         health = health - damage;

@@ -157,6 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29685737a2c5b4647b0b422cd7ca0e76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  wp: {fileID: 0}
 --- !u!114 &6826304200711123895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,9 +170,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e463b9881444c624cb3e9f6053f609cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  current_life: 20
   current_energy: 20
   speed_energy: 1
+  gameFinish: {fileID: 2944054706264813152, guid: 11d5990bad7bc7e48b13e013c9b8a076, type: 3}
   vision: {fileID: 5492891448240033246}
   player_inventory: {fileID: 5056893064554054428}
   main_character: {fileID: 2041912733884068357}

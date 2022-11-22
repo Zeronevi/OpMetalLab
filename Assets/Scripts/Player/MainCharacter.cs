@@ -16,7 +16,12 @@ public class MainCharacter : MonoBehaviour
     Vector2 _velocity;
     private Rigidbody2D _rb;
     private bool _canMove = true;
-    
+
+    private void Awake()
+    {
+        if (PlayerStatus.GetInstance() != null) PlayerStatus.GetInstance();
+        Enemy.ResetListEnemy();
+    }
 
     void Start()
     {
