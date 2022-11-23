@@ -83,14 +83,16 @@ public class Enemy : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         agent.updateRotation = false;
         agent.updateUpAxis = false;
-
+        
         jukebox = GetComponent<AudioSource>();
-
+        
         if (enemyList == null) enemyList = new List<Enemy>();
         enemyList.Add(this.gameObject.GetComponent<Enemy>());
 
         _state = startingState;
 
+        _investigationTarget = null;
+        
         switch (_state)
         {
             case EnemyState.Idle: 
@@ -118,12 +120,6 @@ public class Enemy : MonoBehaviour
         {
             this.transform.rotation = Quaternion.Euler(-2, 0, (_state == EnemyState.Chase) ? (_playerDirectionAngle) : (_angle));
         }
-
-        
-        
-        
-        //TODO ADICIONAR SFX e VISUALIZAÇÃO DE "PASSOS NO ESCURO"
-        //FORMATO: Corroutine
         
         switch(_state)
         {
@@ -178,13 +174,14 @@ public class Enemy : MonoBehaviour
             {
                 _spinning = StartCoroutine(Spin());
             }
-            else if(_spinCondition == SpinCondition.Spun)
+            else if (_spinCondition == SpinCondition.Spun)
             {
                 _spinning = null;
                 _spinCondition = SpinCondition.NotSpun;
                 _investigationTarget = null;
                 //volta para o modo de patrulha.
                 EnterPatrol();
+                _investigationTarget = null;
             }
         } 
     }
@@ -224,7 +221,7 @@ public class Enemy : MonoBehaviour
     public void EnterChase()
     {
         if (_state == EnemyState.Chase) return;
-        
+           
         _state = EnemyState.Chase;
         Debug.Log(this.name + " entrou estado de perseguição, cuidado!!!");
         //TODO colocar indicador de status
@@ -233,7 +230,7 @@ public class Enemy : MonoBehaviour
         if(_spinning != null)
             StopCoroutine(_spinning);
         StartCoroutine(ChaseRoutine());
-
+        StartCoroutine(RateOfFireDelay());//evita o tiro instantaneo ao ser alertado
         List<string> sentences = new List<string>();
         sentences.Add("Hey, bro, come here NOW!");
         sentences.Add("I'll kill you!");
@@ -261,7 +258,7 @@ public class Enemy : MonoBehaviour
         _playerDirection = (player.transform.position - transform.position);
         _playerDirectionAngle = (180/math.PI) * math.atan2(_playerDirection.y,_playerDirection.x);
         
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, _playerDirection,200f,layerMask:mask);
+        RaycastHit2D hit = Physics2D.Raycast(gunBarrel.transform.position, _playerDirection,200f,layerMask:mask);
         
         Debug.DrawRay(this.transform.position,_playerDirection);
         
@@ -285,6 +282,7 @@ public class Enemy : MonoBehaviour
             
         float dist = Vector2.Distance(this.transform.position, noise.Position);
 
+        print("Ouvi!" + noise.Strength + " "+ dist);
         if (dist < noise.Strength && 
             (_investigationTarget == null || _investigationTarget?.soundType < noise.soundType))
         {
@@ -366,6 +364,10 @@ public class Enemy : MonoBehaviour
         {
             Instantiate(bloodEffect2, this.transform.position, transform.rotation);
             Die();
+        }
+        else
+        {
+            EnterChase();
         }
     }
 
