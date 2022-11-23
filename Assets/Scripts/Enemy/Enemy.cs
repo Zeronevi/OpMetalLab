@@ -113,9 +113,12 @@ public class Enemy : MonoBehaviour
         float _angle = (180/math.PI) * math.atan2(agent.velocity.y,agent.velocity.x);
 
         bool canSeePlayer = FindPlayer();
-        
-        if(_spinCondition != SpinCondition.Spinning)
-            this.transform.rotation = Quaternion.Euler(0, 0, (_state == EnemyState.Chase) ? (_playerDirectionAngle) : (_angle));
+
+        if (_state == EnemyState.Chase || _spinCondition != SpinCondition.Spinning && agent.velocity.magnitude > 0)
+        {
+            this.transform.rotation = Quaternion.Euler(-2, 0, (_state == EnemyState.Chase) ? (_playerDirectionAngle) : (_angle));
+        }
+
         
         
         
