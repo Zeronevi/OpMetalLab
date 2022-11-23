@@ -12,6 +12,7 @@ public class DefaultAmmo : MonoBehaviour
     public static int PISTOL_AMMO = 1;
     public static int SUB_AMMO = 2;
     public static int SNIPPER_AMMO = 3;
+    public static int KNIFE_AMMO = 4;
 
     public int ammo_amount = 1;
     public int type = 1;

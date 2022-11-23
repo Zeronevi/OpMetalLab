@@ -87,6 +87,8 @@ public class PlayerStatus : MonoBehaviour
         if (current_energy > MAX_ENERGY) current_energy = MAX_ENERGY;
     }
 
+    
+
     [SerializeField] Cone_vision vision = null; 
     [SerializeField] WeaponInventory player_inventory = null;
     [SerializeField] MainCharacter main_character = null;
@@ -138,4 +140,72 @@ public class PlayerStatus : MonoBehaviour
         current_energy = MAX_ENERGY;
         keys = 0;
     }
+
+    
+
+    //animator
+    [SerializeField] private Animator animatorBody = null;
+    [SerializeField] private Animator animatorFeet = null;
+
+    private bool walking = false;
+    private bool running = false;
+    private void upadateAnimator()
+    {
+        if (Time.timeScale == 0) return;
+
+        isWalking();
+
+        if(walking && Input.GetKeyDown(KeyCode.LeftShift) && current_energy > 0)
+        {
+            running = true;
+        } else if (Input.GetKeyUp(KeyCode.LeftShift) || current_energy <= 0)
+        {
+            running = false;
+        }
+
+        bool reloading = false;
+        bool shot = false;
+        int state;
+
+        Weapon weapon = player_inventory.getSelectedWeapon();
+        
+        if(weapon == null)
+        {
+            state = 0;
+        } else
+        {
+            state = weapon.GetTypeWeapon();
+            reloading = weapon.IsReloading();
+            shot = weapon.IsShotAndReset();
+        }
+        
+       
+        animatorBody.SetInteger("State", state);
+        animatorBody.SetBool("Walk", walking);
+        animatorBody.SetBool("Reload", reloading);
+        if (shot) animatorBody.SetTrigger("Shoot");
+
+        animatorFeet.SetBool("Walk", walking);
+        animatorFeet.SetBool("Run", running);
+    }
+
+    public void isWalking()
+    {
+        Vector2 velocity = Vector2.zero;
+        velocity.x = Input.GetAxisRaw("Horizontal");
+        velocity.y = Input.GetAxisRaw("Vertical");
+        if(velocity.magnitude <= 0.00001)
+        {
+            walking = false;
+        } else
+        {
+            walking = true;
+        }
+    }
+
+    private void Update()
+    {
+        upadateAnimator();
+    }
+
 }

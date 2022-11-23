@@ -6,7 +6,6 @@ public class Weapon : MonoBehaviour
 {
     [SerializeField] Sprite lateralSprite = null;
 
-    private GameObject superior;
     private GameObject lateral;
 
     [SerializeField] protected Target target = null;
@@ -64,7 +63,6 @@ public class Weapon : MonoBehaviour
         this.lateral = transform.GetChild(0).gameObject;
         this.lateral.GetComponent<SpriteRenderer>().sprite = lateralSprite;
 
-        this.superior = transform.GetChild(1).gameObject;
         weaponCollider = GetComponent<BoxCollider2D>();
         jukebox = GetComponentInChildren<AudioSource>();
     }
@@ -129,7 +127,7 @@ public class Weapon : MonoBehaviour
 
         ammo_in_weapon -= 1;
         time = TIME_SHOOTS;
-
+        shot = true;
     }
 
     protected void PlayAudio()
@@ -139,31 +137,26 @@ public class Weapon : MonoBehaviour
 
     public void Equip()
     {
-        superior.SetActive(true);
         lateral.SetActive(false);
     }
 
     public void Unequip()
     {
-        superior.SetActive(false);
         lateral.SetActive(false);
     }
 
     public void Take()
     {
-        superior.SetActive(false);
         lateral.SetActive(false);
     }
 
     public void Drop()
     {
-        superior.SetActive(false);
         lateral.SetActive(true);
     }
 
     public void Hide()
     {
-        superior.SetActive(false);
         lateral.SetActive(false);
     }
 
@@ -271,5 +264,13 @@ public class Weapon : MonoBehaviour
     {
         return time > 0;
     }
+
+    protected bool shot = false;
+    public bool IsShotAndReset()
+    {
+        bool temp = shot;
+        shot = false;
+        return temp;
+    } 
 
 }
