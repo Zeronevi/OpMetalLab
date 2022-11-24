@@ -3,17 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//Singleton　(X﹏X)。
-//Todo: Deixar de ser Singleton, <<controlar as coisas por eventos>>
-
 public class NoiseSystem : MonoBehaviour
-{ 
-    public static List<Noise> Noises;
+{
     public GameObject Player;
-    
+
+    public GameObject SoundRadius;
+    public const int SoundCircleSteps = 10;
+
     public void Start()
     {
-        Noises = new List<Noise>();
+        
     }
 
     public static void MakeNoise(Vector2 position, float strength, Noise.SoundType soundType)
@@ -23,8 +22,28 @@ public class NoiseSystem : MonoBehaviour
         {
             enemy.Listen(noise);
         }
-        Noises.Add(noise);
+        
     }
+
+    public void AddEnemyStep(Vector2 position, float radius)
+    {
+        GameObject soundRadius = Instantiate(SoundRadius);
+        soundRadius.transform.position = position;
+        LineRenderer circleRenderer = soundRadius.GetComponent<LineRenderer>();
+
+        circleRenderer.positionCount = SoundCircleSteps;
+        for (int i = 0; i < SoundCircleSteps; i++)
+        {
+            float circProgress = (float)i / SoundCircleSteps;
+            float currRad = circProgress * 2 * Mathf.PI;
+
+            Vector2 curr_pos = new Vector2(radius * Mathf.Cos(currRad), radius * Mathf.Sin(currRad)) + position;
+            circleRenderer.SetPosition(i, curr_pos);
+        }
+
+        Destroy(soundRadius, 0.30f);
+    }
+
 }
 
 public class Noise
@@ -35,10 +54,10 @@ public class Noise
     public enum SoundType
     {
         //TODO tweak
-        AmbientNoise = 1,Steps = 3,BulletHit = 5,SilencedGunshot = 8,Gunshot = 15
+        AmbientNoise = 1, Steps = 3, BulletHit = 5, SilencedGunshot = 8, Gunshot = 15
     }
     public SoundType soundType;
-    
+
     public Noise(Vector2 pos, float strength, SoundType soundType)
     {
         Position = pos;

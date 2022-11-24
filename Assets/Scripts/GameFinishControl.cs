@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameFinishControl : MonoBehaviour
 {
@@ -37,5 +38,32 @@ public class GameFinishControl : MonoBehaviour
     public void desPause()
     {
         Time.timeScale = 1;
+    }
+
+    public void Retry()
+    {
+        Replay();
+    }
+
+    public void Next()
+    {
+        int size = SceneManager.sceneCountInBuildSettings;
+        int current_index = SceneManager.GetActiveScene().buildIndex;
+        if (current_index >= size) SceneManager.LoadScene(0);
+        else SceneManager.LoadScene(current_index+1);
+        desPause();
+    }
+
+    public void Replay()
+    {
+        string name = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(name);
+        desPause();
+    }
+
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+        desPause();
     }
 }

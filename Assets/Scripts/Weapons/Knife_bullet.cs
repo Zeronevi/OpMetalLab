@@ -14,6 +14,7 @@ public class Knife_bullet : Bullet
     public Vector2 center = Vector2.zero;
 
     private EdgeCollider2D edgeCollider = null;
+    private GameObject referenceCenter = null;
 
     // Start is called before the first frame update
     void Start()
@@ -23,10 +24,11 @@ public class Knife_bullet : Bullet
     }
 
     bool active = false;
-    public void updateParameters(Vector2 center, float radius, float centerAngle, float angleRange)
+    public void updateParameters(Vector2 center, float radius, float centerAngle, float angleRange, GameObject referenceCenter)
     {
         
         this.center = center;
+        this.referenceCenter = referenceCenter;
         this.radius = radius;
         this.initial_angle = centerAngle - angleRange / 2f;
         this.angle = initial_angle;
@@ -34,9 +36,11 @@ public class Knife_bullet : Bullet
         active = true;
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         if (!active) return;
+
+        if(referenceCenter != null) center = referenceCenter.transform.position;
 
         List<Vector2> points = new List<Vector2>();
         points.Add(Vector2.zero);
@@ -44,7 +48,7 @@ public class Knife_bullet : Bullet
         points.Add(radius * new Vector2(Mathf.Cos(radianos), Mathf.Sin(radianos)));
         edgeCollider.SetPoints(points);
 
-        angle += Time.fixedDeltaTime * angleSpeed;
+        angle += Time.deltaTime * angleSpeed;
         if (angle > initial_angle + rangeAngle) Destroy(gameObject);
     }
 }

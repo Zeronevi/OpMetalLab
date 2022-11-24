@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class NormalBullet : Bullet
 {
-    public int damage;
     private void Start()
     {
         Destroy(this,10f);
@@ -19,7 +18,7 @@ public class NormalBullet : Bullet
 
         if (obj.CompareTag("Player"))
         {
-            //TODO logica de dano no jogador   
+            PlayerStatus.TakeDamage(damage); 
         }
         else if (obj.CompareTag("Enemy")){
             obj.GetComponent<Enemy>().takeDamage(damage);

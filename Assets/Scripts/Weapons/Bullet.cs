@@ -18,15 +18,17 @@ public abstract class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D hitInfo)
     {
+        takeDamage(hitInfo);
+    }
 
+    public virtual void takeDamage(Collider2D hitInfo)
+    {
         Enemy enemy = hitInfo.GetComponent<Enemy>();
         Debug.Log(hitInfo.name);
         if (enemy != null)
         {
-            enemy.takeDamage(10);
+            enemy.takeDamage(damage);
             Destroy(this.gameObject);
-
         }
-
     }
 }

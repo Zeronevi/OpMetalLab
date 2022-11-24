@@ -13,10 +13,7 @@ public class TextSpeakSystem : MonoBehaviour
     [SerializeField] private GameObject actionBox;
 
     float timeToWait = 0;
-    private void Start()
-    {
-        ShowText("Vamos lá - Com tudo agora!");
-    }
+
 
     public void ShowText(string text)
     {

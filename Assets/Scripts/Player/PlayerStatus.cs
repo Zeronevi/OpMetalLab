@@ -16,18 +16,34 @@ public class PlayerStatus : MonoBehaviour
         return keys;
     }
 
-    public static float MAX_LIFE = 1200.0f;
+    public static float MAX_LIFE = 200f;
 
     private float current_life = MAX_LIFE;
 
     public static float MAX_ENERGY = 20.0f;
     [SerializeField] private float current_energy = MAX_LIFE;
     [SerializeField] private float speed_energy = 1f;
-
+    [SerializeField] private GameFinishControl gameFinish = null;
     public static void SetCurrentLife(float life)
     {
         PlayerStatus playerStatus = GetInstance();
         if (playerStatus != null) playerStatus.current_life = life;
+    }
+
+    [SerializeField] private GameObject bloodEffect = null;
+    public static void TakeDamage(float damage)
+    {
+        PlayerStatus playerStatus = GetInstance();
+        if (playerStatus != null)
+        {
+            playerStatus.current_life -= damage;
+            if (playerStatus.bloodEffect != null) Destroy(Instantiate(playerStatus.bloodEffect, playerStatus.main_character.transform.position, Quaternion.identity), 1f);
+            if (playerStatus.current_life <= 0 && playerStatus.gameFinish != null)
+            {
+                
+                Instantiate(playerStatus.gameFinish, Vector2.zero, Quaternion.identity).Loser();
+            }
+        }
     }
 
     public static float getCurrentLife()
@@ -72,6 +88,8 @@ public class PlayerStatus : MonoBehaviour
         current_energy += speed_energy * Time.deltaTime;
         if (current_energy > MAX_ENERGY) current_energy = MAX_ENERGY;
     }
+
+    
 
     [SerializeField] Cone_vision vision = null; 
     [SerializeField] WeaponInventory player_inventory = null;
@@ -124,4 +142,72 @@ public class PlayerStatus : MonoBehaviour
         current_energy = MAX_ENERGY;
         keys = 0;
     }
+
+    
+
+    //animator
+    [SerializeField] private Animator animatorBody = null;
+    [SerializeField] private Animator animatorFeet = null;
+
+    private bool walking = false;
+    private bool running = false;
+    private void upadateAnimator()
+    {
+        if (Time.timeScale == 0) return;
+
+        isWalking();
+
+        if(walking && Input.GetKeyDown(KeyCode.LeftShift) && current_energy > 0)
+        {
+            running = true;
+        } else if (Input.GetKeyUp(KeyCode.LeftShift) || current_energy <= 0)
+        {
+            running = false;
+        }
+
+        bool reloading = false;
+        bool shot = false;
+        int state;
+
+        Weapon weapon = player_inventory.getSelectedWeapon();
+        
+        if(weapon == null)
+        {
+            state = 0;
+        } else
+        {
+            state = weapon.GetTypeWeapon();
+            reloading = weapon.IsReloading();
+            shot = weapon.IsShotAndReset();
+        }
+        
+       
+        animatorBody.SetInteger("State", state);
+        animatorBody.SetBool("Walk", walking);
+        animatorBody.SetBool("Reload", reloading);
+        if (shot) animatorBody.SetTrigger("Shoot");
+
+        animatorFeet.SetBool("Walk", walking);
+        animatorFeet.SetBool("Run", running);
+    }
+
+    public void isWalking()
+    {
+        Vector2 velocity = Vector2.zero;
+        velocity.x = Input.GetAxisRaw("Horizontal");
+        velocity.y = Input.GetAxisRaw("Vertical");
+        if(velocity.magnitude <= 0.00001)
+        {
+            walking = false;
+        } else
+        {
+            walking = true;
+        }
+    }
+
+    private void Update()
+    {
+        upadateAnimator();
+    }
+
 }

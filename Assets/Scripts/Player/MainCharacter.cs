@@ -16,7 +16,12 @@ public class MainCharacter : MonoBehaviour
     Vector2 _velocity;
     private Rigidbody2D _rb;
     private bool _canMove = true;
-    
+
+    private void Awake()
+    {
+        if (PlayerStatus.GetInstance() != null) PlayerStatus.GetInstance();
+        Enemy.ResetListEnemy();
+    }
 
     void Start()
     {
@@ -48,24 +53,6 @@ public class MainCharacter : MonoBehaviour
 
         if (_canMove) _rb.velocity = _velocity*speed;
     }
-
-    /*private void OnTriggerEnter2D(Collider2D objCol)
-    {
-        //Ammo ammo = objCol.GetComponent<>();
-        Ammo ammo = objCol.GetComponent<Ammo>();
-
-        if (ammo != null)
-        {
-            if (numb_of_bullets == 0)
-            {
-                numb_of_bullets = ammo.get_ammo();
-                ammo.Destrs();
-            }
-        }
-
-
-
-    }*/
 
     public void SetSpeed(float value)
     {

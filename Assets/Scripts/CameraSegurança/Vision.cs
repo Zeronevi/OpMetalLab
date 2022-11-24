@@ -8,7 +8,7 @@ public class Vision : MonoBehaviour
     [SerializeField] private float fov = 40f;
     [SerializeField] private float viewDistance = 10f;
     [SerializeField] private float minViewDistance = 2f;
-
+    [SerializeField] private bool maxAlert = false;
     [SerializeField] private LayerMask layerMask;
 
     private LineRenderer lineRender;
@@ -31,6 +31,8 @@ public class Vision : MonoBehaviour
     {
         UpdateMesh();
         UpdateLine();
+
+
     }
 
     private void UpdateMesh()
@@ -146,8 +148,61 @@ public class Vision : MonoBehaviour
         gameObject.layer = LayerMask.NameToLayer("HUD");
     }
 
+    [SerializeField] private float MINIMUNS_RADIUS_FOR_WARNING = 10;
     private void Detected()
     {
-        print("Detectado");
+        if (!isAlert) {
+            if (!maxAlert) StartCoroutine(AlertEnemys());
+            else StartCoroutine(ChangeToMaxAlert());
+        } 
+    }
+
+    private bool isAlert = false;
+    private IEnumerator AlertEnemys()
+    {
+        isAlert = true;
+        yield return new WaitForSeconds(5f);
+        
+        Vector2 current_position = this.gameObject.transform.position;
+        foreach (Enemy enemy in Enemy.enemyList)
+        {
+            Vector2 deltaDist = current_position - (Vector2)enemy.transform.position;
+            if ((deltaDist.magnitude) <= MINIMUNS_RADIUS_FOR_WARNING)
+            {
+                enemy.EnterChase();
+            }
+        }
+        isAlert = false;
+    }
+
+    [SerializeField] GameObject back = null;
+    public IEnumerator ChangeToMaxAlert()
+    {
+        isAlert = true;
+
+        bool nothingtoDo = false;
+        if (back != null)
+        {
+            back.GetComponent<Animator>().SetBool("Alert", true);
+            nothingtoDo = back.GetComponent<AudioSource>().isPlaying;
+            if (!nothingtoDo)
+                back.GetComponent<AudioSource>().Play();
+        }
+
+        yield return new WaitForSeconds(5f);
+
+        if(!nothingtoDo)
+        {
+            Spwner[] spawners = FindObjectsOfType<Spwner>();
+            foreach (Spwner spawner in spawners)
+            {
+                spawner.Active();
+            }
+
+            foreach (Enemy enemy in Enemy.enemyList)
+            {
+                enemy.EnterChase();
+            }
+        }
     }
 }

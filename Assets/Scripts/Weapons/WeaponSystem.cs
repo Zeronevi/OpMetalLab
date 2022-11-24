@@ -175,6 +175,8 @@ public class WeaponSystem : MonoBehaviour
 
     public void Shoot()
     {
+        if (Time.timeScale == 0) return;
+
         Target playerTarget = targetSystem.GetTarget();
         Weapon weapon = playerInventory.getSelectedWeapon();
         if (playerTarget == null || !playerInventory.isSelected()) return;

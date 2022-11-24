@@ -6,7 +6,6 @@ public class Key : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        print("ASAS");
         if (!collision.name.Equals("Player")) return;
 
         PlayerStatus.GetInstance().addKey();

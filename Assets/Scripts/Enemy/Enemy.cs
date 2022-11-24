@@ -4,9 +4,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using Unity.Mathematics;
+using Random = System.Random;
+
 public class Enemy : MonoBehaviour
 {
     public static List<Enemy> enemyList;
+    public static void ResetListEnemy()
+    {
+        if(enemyList == null)
+            enemyList = new List<Enemy>();
+
+        enemyList.Clear();
+    }
+
+
     [SerializeField] LifeBar life_bar = null;
     [SerializeField] GameObject MASTER_OBJ = null;
 
@@ -41,6 +52,7 @@ public class Enemy : MonoBehaviour
     //--Audicao--
     private Noise _investigationTarget = null;
     private const float SoundThreshold = 1;
+    private NoiseSystem noiseSystem;
 
     //--PathFinding-- 
     public Vector2 moveTarget;
@@ -65,6 +77,8 @@ public class Enemy : MonoBehaviour
     
     void Start()
     {
+        noiseSystem = FindObjectOfType<NoiseSystem>();
+
         player = GameObject.Find("Player");
         health = MAX_HEALTH;
 
@@ -72,11 +86,15 @@ public class Enemy : MonoBehaviour
         agent.updateRotation = false;
         agent.updateUpAxis = false;
         
+        jukebox = GetComponent<AudioSource>();
+        
         if (enemyList == null) enemyList = new List<Enemy>();
         enemyList.Add(this.gameObject.GetComponent<Enemy>());
 
         _state = startingState;
 
+        _investigationTarget = null;
+        
         switch (_state)
         {
             case EnemyState.Idle: 
@@ -89,6 +107,8 @@ public class Enemy : MonoBehaviour
                 EnterIdle();
                 break;
         }
+
+        StartCoroutine(StepNoiseMaker());
     }
 
     // Update is called once per frame
@@ -97,14 +117,11 @@ public class Enemy : MonoBehaviour
         float _angle = (180/math.PI) * math.atan2(agent.velocity.y,agent.velocity.x);
 
         bool canSeePlayer = FindPlayer();
-        
-        if(_spinCondition != SpinCondition.Spinning)
-            this.transform.rotation = Quaternion.Euler(0, 0, (_state == EnemyState.Chase) ? (_playerDirectionAngle) : (_angle));
-        
-        
-        
-        //TODO ADICIONAR SFX e VISUALIZAÇÃO DE "PASSOS NO ESCURO"
-        //FORMATO: Corroutine
+
+        if (_state == EnemyState.Chase || _spinCondition != SpinCondition.Spinning && agent.velocity.magnitude > 0)
+        {
+            this.transform.rotation = Quaternion.Euler(-2, 0, (_state == EnemyState.Chase) ? (_playerDirectionAngle) : (_angle));
+        }
         
         switch(_state)
         {
@@ -159,13 +176,14 @@ public class Enemy : MonoBehaviour
             {
                 _spinning = StartCoroutine(Spin());
             }
-            else if(_spinCondition == SpinCondition.Spun)
+            else if (_spinCondition == SpinCondition.Spun)
             {
                 _spinning = null;
                 _spinCondition = SpinCondition.NotSpun;
                 _investigationTarget = null;
                 //volta para o modo de patrulha.
                 EnterPatrol();
+                _investigationTarget = null;
             }
         } 
     }
@@ -177,7 +195,7 @@ public class Enemy : MonoBehaviour
             Shoot();
         }
 
-        agent.isStopped = Vector2.Distance(transform.position, player.transform.position) < 7 ;
+        agent.isStopped = seesPlayer && Vector2.Distance(transform.position, player.transform.position) < 4;
     }
 
     private void EnterIdle()
@@ -189,7 +207,6 @@ public class Enemy : MonoBehaviour
     {
         _state = EnemyState.Patrol;
         if(patrolPoints?.Count  < 2) EnterIdle();
-        
         SetDestination(patrolPoints[_patrolPointIndex].transform.position);
     }
     
@@ -202,8 +219,10 @@ public class Enemy : MonoBehaviour
         SetDestination(position);
     }
 
-    private void EnterChase()
+    public void EnterChase()
     {
+        if (_state == EnemyState.Chase) return;
+           
         _state = EnemyState.Chase;
         Debug.Log(this.name + " entrou estado de perseguição, cuidado!!!");
         //TODO colocar indicador de status
@@ -212,12 +231,23 @@ public class Enemy : MonoBehaviour
         if(_spinning != null)
             StopCoroutine(_spinning);
         StartCoroutine(ChaseRoutine());
+        StartCoroutine(RateOfFireDelay());//evita o tiro instantaneo ao ser alertado
+        List<string> sentences = new List<string>();
+        sentences.Add("Hey, bro, come here NOW!");
+        sentences.Add("I'll kill you!");
+        sentences.Add("WHAT? How do you enter here?");
+        sentences.Add("Oh! Why are you runnning?");
+        
+        Speak(sentences[random.Next(0, sentences.Count)]);
     }
-    
+
+
+
+    private Random random = new Random();
     //
     // --  Sentidos e Acoes
     //
-    
+
     private void SetDestination(Vector2 position)
     {
         moveTarget = position;
@@ -229,7 +259,7 @@ public class Enemy : MonoBehaviour
         _playerDirection = (player.transform.position - transform.position);
         _playerDirectionAngle = (180/math.PI) * math.atan2(_playerDirection.y,_playerDirection.x);
         
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, _playerDirection,200f,layerMask:mask);
+        RaycastHit2D hit = Physics2D.Raycast(gunBarrel.transform.position, _playerDirection,200f,layerMask:mask);
         
         Debug.DrawRay(this.transform.position,_playerDirection);
         
@@ -253,6 +283,7 @@ public class Enemy : MonoBehaviour
             
         float dist = Vector2.Distance(this.transform.position, noise.Position);
 
+        print("Ouvi!" + noise.Strength + " "+ dist);
         if (dist < noise.Strength && 
             (_investigationTarget == null || _investigationTarget?.soundType < noise.soundType))
         {
@@ -262,10 +293,11 @@ public class Enemy : MonoBehaviour
         }
     }
 
+    private AudioSource jukebox = null;
     private void Shoot()
     {
         if (_canShoot)
-        { 
+        {
             //TODO ADICIONAR SFX E VISUALIZAÇÃO DO SOM
             var _bullet = Instantiate(bulletPrefab);
             _bullet.transform.position = gunBarrel.transform.position;
@@ -274,6 +306,9 @@ public class Enemy : MonoBehaviour
             Vector2 bulletDirection = new Vector2(math.cos(bulletAngle), math.sin(bulletAngle));
             _bullet.GetComponent<Rigidbody2D>().velocity = bulletDirection*bulletSpeed;
             StartCoroutine(RateOfFireDelay());
+
+            //noiseSystem.AddEnemyStep(this.transform.position, 15f);
+            jukebox.Play();
         }
     }
 
@@ -307,7 +342,17 @@ public class Enemy : MonoBehaviour
         _spinCondition = SpinCondition.Spun;
     }
 
-    public void takeDamage(int damage)
+    private IEnumerator StepNoiseMaker()
+    {
+        while (isActiveAndEnabled)
+        {
+            if (agent.velocity.magnitude > 0.05f)
+                if(noiseSystem != null) noiseSystem.AddEnemyStep(transform.position, 0.15f);
+            yield return new WaitForSeconds(.30f);
+        }
+    }
+
+    public void takeDamage(float damage)
     {
         Debug.Log(damage);
         health = health - damage;
@@ -321,6 +366,10 @@ public class Enemy : MonoBehaviour
             Instantiate(bloodEffect2, this.transform.position, transform.rotation);
             Die();
         }
+        else
+        {
+            EnterChase();
+        }
     }
 
     private void Die()
@@ -328,6 +377,15 @@ public class Enemy : MonoBehaviour
         gameObject.SetActive(false);
         Enemy.enemyList.Remove(this.gameObject.GetComponent<Enemy>());
         Destroy(MASTER_OBJ);
+    }
+
+    [SerializeField] TextBox textBox = null;
+    private void Speak(string text)
+    {
+        TextBox textbox = Instantiate(this.textBox, Vector2.zero, Quaternion.identity);
+        textbox.SetMessage(text);
+        textbox.SetReferenceObj(gameObject);
+        textbox.Enable();
     }
 
 }
