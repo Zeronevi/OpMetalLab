@@ -12,8 +12,6 @@ public class GameFinishControl : MonoBehaviour
     [SerializeField] private GameObject button_victory = null;
     [SerializeField] private GameObject button_loser = null;
 
-    [SerializeField] private string next_scene_name = "";
-
     private void Start()
     {
         Time.timeScale = 0;
@@ -49,12 +47,11 @@ public class GameFinishControl : MonoBehaviour
 
     public void Next()
     {
-        if (next_scene_name.Equals("")) MainMenu();
-        else
-        {
-            SceneManager.LoadScene(next_scene_name);
-            desPause();
-        }
+        int size = SceneManager.sceneCountInBuildSettings;
+        int current_index = SceneManager.GetActiveScene().buildIndex;
+        if (current_index >= size) SceneManager.LoadScene(0);
+        else SceneManager.LoadScene(current_index+1);
+        desPause();
     }
 
     public void Replay()

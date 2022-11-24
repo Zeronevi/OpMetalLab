@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class MainMenuScript : MonoBehaviour
 {
@@ -78,5 +80,22 @@ public class MainMenuScript : MonoBehaviour
         AudioSource juke_copy = Instantiate(jukebox, Vector3.zero, Quaternion.identity);
         juke_copy.Play();
         Destroy(juke_copy.gameObject, 0.5f);
+    }
+
+    private string mapaSelected = "";
+
+    public void SelectMapa(string name)
+    {
+        mapaSelected = name;
+    }
+
+    public void ResetSelectedMapa()
+    {
+        mapaSelected = null;
+    }
+
+    public void PlayGame()
+    {
+        if(!mapaSelected.Equals("")) SceneManager.LoadScene(mapaSelected);
     }
 }

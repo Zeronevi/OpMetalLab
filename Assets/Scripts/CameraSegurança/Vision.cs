@@ -180,23 +180,29 @@ public class Vision : MonoBehaviour
     {
         isAlert = true;
 
+        bool nothingtoDo = false;
         if (back != null)
         {
             back.GetComponent<Animator>().SetBool("Alert", true);
-            back.GetComponent<AudioSource>().Play();
+            nothingtoDo = back.GetComponent<AudioSource>().isPlaying;
+            if (!nothingtoDo)
+                back.GetComponent<AudioSource>().Play();
         }
 
         yield return new WaitForSeconds(5f);
 
-        Spwner[] spawners = FindObjectsOfType<Spwner>();
-        foreach(Spwner spawner in spawners)
+        if(!nothingtoDo)
         {
-            spawner.Active();
-        }
+            Spwner[] spawners = FindObjectsOfType<Spwner>();
+            foreach (Spwner spawner in spawners)
+            {
+                spawner.Active();
+            }
 
-        foreach (Enemy enemy in Enemy.enemyList)
-        {
-            enemy.EnterChase();
+            foreach (Enemy enemy in Enemy.enemyList)
+            {
+                enemy.EnterChase();
+            }
         }
     }
 }

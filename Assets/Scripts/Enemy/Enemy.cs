@@ -207,7 +207,6 @@ public class Enemy : MonoBehaviour
     {
         _state = EnemyState.Patrol;
         if(patrolPoints?.Count  < 2) EnterIdle();
-        
         SetDestination(patrolPoints[_patrolPointIndex].transform.position);
     }
     
