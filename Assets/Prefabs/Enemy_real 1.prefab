@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7593484080214579204}
   m_Layer: 6
-  m_Name: Enemy_real
+  m_Name: Enemy_real 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -620,7 +620,7 @@ MonoBehaviour:
   MASTER_OBJ: {fileID: 4477241143539262497}
   bloodEffect2: {fileID: 4227424330636120077, guid: 8993e5c6368f78148a5c94a8106a5477, type: 3}
   bloodEffect1: {fileID: 7605376015754563760, guid: 1d28a010bcc0e52449025edb86b5c79b, type: 3}
-  startingState: 0
+  startingState: 3
   patrolPoints: []
   mask:
     serializedVersion: 2

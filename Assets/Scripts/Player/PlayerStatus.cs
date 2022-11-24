@@ -30,12 +30,14 @@ public class PlayerStatus : MonoBehaviour
         if (playerStatus != null) playerStatus.current_life = life;
     }
 
+    [SerializeField] private GameObject bloodEffect = null;
     public static void TakeDamage(float damage)
     {
         PlayerStatus playerStatus = GetInstance();
         if (playerStatus != null)
         {
             playerStatus.current_life -= damage;
+            if (playerStatus.bloodEffect != null) Destroy(Instantiate(playerStatus.bloodEffect, playerStatus.main_character.transform.position, Quaternion.identity), 1f);
             if (playerStatus.current_life <= 0 && playerStatus.gameFinish != null)
             {
                 

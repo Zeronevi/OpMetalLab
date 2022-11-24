@@ -165,8 +165,8 @@ MonoBehaviour:
   total_ammo: 0
   ammo_in_weapon: 0
   bulletSpeed: 25
-  bulletDamage: 20
-  bulletNoise: 5
+  bulletDamage: 60
+  bulletNoise: 12
   speed_on_target: -10
   fov_on_target: -10
   viewDistance_on_target: -10

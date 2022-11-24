@@ -52,7 +52,7 @@ public class Enemy : MonoBehaviour
     //--Audicao--
     private Noise _investigationTarget = null;
     private const float SoundThreshold = 1;
-    [SerializeField] public NoiseSystem noiseSystem;
+    private NoiseSystem noiseSystem;
 
     //--PathFinding-- 
     public Vector2 moveTarget;
@@ -77,6 +77,8 @@ public class Enemy : MonoBehaviour
     
     void Start()
     {
+        noiseSystem = FindObjectOfType<NoiseSystem>();
+
         player = GameObject.Find("Player");
         health = MAX_HEALTH;
 
@@ -346,7 +348,7 @@ public class Enemy : MonoBehaviour
         while (isActiveAndEnabled)
         {
             if (agent.velocity.magnitude > 0.05f)
-                noiseSystem.AddEnemyStep(transform.position, 0.15f);
+                if(noiseSystem != null) noiseSystem.AddEnemyStep(transform.position, 0.15f);
             yield return new WaitForSeconds(.30f);
         }
     }

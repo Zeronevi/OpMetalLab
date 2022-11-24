@@ -25,7 +25,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 285431091499745519}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.203, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.5375001, y: 2.5375001, z: 2.5375}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -174,6 +174,7 @@ MonoBehaviour:
   current_energy: 20
   speed_energy: 1
   gameFinish: {fileID: 2944054706264813152, guid: 11d5990bad7bc7e48b13e013c9b8a076, type: 3}
+  bloodEffect: {fileID: 7605376015754563760, guid: 1d28a010bcc0e52449025edb86b5c79b, type: 3}
   vision: {fileID: 5492891448240033246}
   player_inventory: {fileID: 5056893064554054428}
   main_character: {fileID: 2041912733884068357}

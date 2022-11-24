@@ -117,7 +117,6 @@ public class Weapon : MonoBehaviour
         Vector2 dir = positionToFire - position;
         
         var objBullet = Instantiate(bullet, position, rotation);
-
         objBullet.GetComponent<Bullet>().SetDamage(bulletDamage);
         objBullet.GetComponent<Rigidbody2D>().velocity =
             bulletSpeed * dir.normalized;

@@ -8,7 +8,7 @@ public class Vision : MonoBehaviour
     [SerializeField] private float fov = 40f;
     [SerializeField] private float viewDistance = 10f;
     [SerializeField] private float minViewDistance = 2f;
-
+    [SerializeField] private bool maxAlert = false;
     [SerializeField] private LayerMask layerMask;
 
     private LineRenderer lineRender;
@@ -151,7 +151,10 @@ public class Vision : MonoBehaviour
     [SerializeField] private float MINIMUNS_RADIUS_FOR_WARNING = 10;
     private void Detected()
     {
-        if (!isAlert) StartCoroutine(AlertEnemys());
+        if (!isAlert) {
+            if (!maxAlert) StartCoroutine(AlertEnemys());
+            else StartCoroutine(ChangeToMaxAlert());
+        } 
     }
 
     private bool isAlert = false;
@@ -170,5 +173,30 @@ public class Vision : MonoBehaviour
             }
         }
         isAlert = false;
+    }
+
+    [SerializeField] GameObject back = null;
+    public IEnumerator ChangeToMaxAlert()
+    {
+        isAlert = true;
+
+        if (back != null)
+        {
+            back.GetComponent<Animator>().SetBool("Alert", true);
+            back.GetComponent<AudioSource>().Play();
+        }
+
+        yield return new WaitForSeconds(5f);
+
+        Spwner[] spawners = FindObjectsOfType<Spwner>();
+        foreach(Spwner spawner in spawners)
+        {
+            spawner.Active();
+        }
+
+        foreach (Enemy enemy in Enemy.enemyList)
+        {
+            enemy.EnterChase();
+        }
     }
 }

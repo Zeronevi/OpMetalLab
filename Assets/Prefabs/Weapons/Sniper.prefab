@@ -82,7 +82,7 @@ MonoBehaviour:
   ammo_in_weapon: 0
   bulletSpeed: 50
   bulletDamage: 100
-  bulletNoise: 5
+  bulletNoise: 25
   speed_on_target: 5
   fov_on_target: 5
   viewDistance_on_target: 120

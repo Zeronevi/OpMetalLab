@@ -97,7 +97,14 @@ public class Normal_Target : Target
 
     public override void setCorrectRadius(float radius)
     {
-        this.radius.SetReferenceValue(radius);
+        try
+        {
+            this.radius.SetReferenceValue(radius);
+        } catch(System.Exception e)
+        {
+            //TODO
+        }
+
     }
 
     public override void setControl(float kp, float ki, float kd)
