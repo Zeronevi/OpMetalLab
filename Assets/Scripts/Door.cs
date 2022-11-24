@@ -26,8 +26,8 @@ public class Door : MonoBehaviour
             int keys_reaming = (keys_need - my_keys);
             if (speakSystem != null && time <= 0)
             {
-                if(keys_reaming == 1) speakSystem.ShowText(keys_reaming + " key reamining!");
-                else speakSystem.ShowText(keys_reaming + " keys reamining!");
+                if(keys_reaming == 1) speakSystem.ShowText(keys_reaming + " key remaining!");
+                else speakSystem.ShowText(keys_reaming + " keys remaining!");
                 time = TIME_TO_ANOTHER_WARNING;
             }
         }
